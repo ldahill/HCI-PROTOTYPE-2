@@ -1,6 +1,11 @@
+
 var isstreaming = false;
 var now_playing_index = 0;
 var displaying = "songs";
+var albums = [];
+var artists = [];
+var songs = [];
+var songfiles= [];
 
 /*
 function playSound(soundindex){
@@ -51,11 +56,7 @@ function playSound(soundindex){
 
 $('input[type=file]').change(function(e){
     files = e.target.files;
-    for (var i = 0, len = files.length; i < len; i++) {
-        file = files[i];
-        console.log(file.webkitRelativePath);
-        extension = file.name.split(".").pop();       
-    }
+    organizeFiles(files);
     file = files[40];
     var objectURL = window.URL.createObjectURL(file);
     console.log('created object url: %o', objectURL);
@@ -64,38 +65,68 @@ $('input[type=file]').change(function(e){
             url: objectURL,
             autoplay: false
     });
-    soundManager.play(mySound.id, {
+   /* soundManager.play(mySound.id, {
             multiShotEvents: true
-    });   
-    //create new html5 audio element with this url
-   /* var audio = $('<audio />', {
-        src: objectURL,
-        autoplay: 'autoplay',
-        controls: 'controls',
-        preload: 'auto'            
-    });
-   console.log('created audio element:%o', audio);
-   $("body").append(audio);*/
-
-
-   
-  //  if (file.type.match(/audio.*/)) {
-    //    var reader = new FileReader();
-      //  reader.onload = function(d) {
-        //    mySound = soundManager.createSound({
-  //              id: 'track_'+files[40].name,
-    //            url: d.result
-     //       });
-  //          soundManager.play(mySound.id, {
-    //            multiShotEvents: true
-      //      });
-  //      }
-   //     reader.readAsDataURL(file);
-   // }; 
+    }); */
 });
 
+function organizeFiles(files){
+    for (var i = 0, len = files.length; i < len; i++) {
+        file = files[i];
+        //console.log(file.webkitRelativePath);
+        extension = file.name.split(".").pop();
+        if(extension != "" && extension != "DS_Store"){
+            songfiles[i] == file;
+            addtoContainers(i, file.webkitRelativePath);
+        }
+    }
+    console.log(artists);
+    console.log(albums);
+}
 
-
+function addtoContainers(fileindex, filepath){
+    pathlist = filepath.split("/");
+    name = pathlist[pathlist.length-1];
+    album = pathlist[pathlist.length-2];
+    artist = pathlist[pathlist.length-3];
+    found = false;
+    song = new Object();
+    song.title = name;
+    song.album = album;
+    song.artist = artist;
+    song.fileindex = fileindex;
+    songs.push(song);
+    songindex = songs.length - 1;
+    for(var i = 0, len = albums.length; i < len; i++){
+        alb = albums[i];
+        if(album == alb.title){
+            alb.songindices.push(songindex);
+            found = true;
+        }
+    }
+    if(found == false){
+        alb = new Object();
+        alb.title = album;
+        alb.songindices = [];
+        alb.songindices.push(songindex);
+        alb.artist = artist;
+        albums.push(alb);
+        for(var i = 0, len = artists.length; i < len; i++){
+            art = artists[i];
+            if(artist == art.title){
+                art.albumindices.push(albums.length - 1);
+                found = true;
+            }
+        }
+        if(found == false){
+            art = new Object();
+            art.title = artist;
+            art.albumindices = [];
+            art.albumindices.push(albums.length - 1);
+            artists.push(art);
+        }
+    }
+}
 
 
 //--------------------------------------------------------------------||
@@ -142,7 +173,7 @@ $(document).on('click', '#list1 li', function(){
     console.log("Browse Element Clicked");
     if (displaying == "songs"){
         if($(this).attr("title") != "true"){
-            list2.append($(this).clone());
+            list2.push($(this).clone());
             $(this).attr("title", "true");
             $(window).trigger('resize');
         } 
@@ -157,23 +188,31 @@ $(document).on('click', '#list1 li', function(){
         console.log("ERROR: SITE DOES NOT SUPPORT GENRE BROWSING YET");
     }
     if (displaying == "artists"){
-        console.log("ERROR: SITE DOES NOT SUPPORT ARTIST BROWSING YET");
+        artistobj = artists[$(this).index()];
+        console.log("Selected artist: "+artistobj.title)
+        albumarr = artistobj.albumindices;
+        $("#list1").empty();
+        for(i = 0, len = albumarr.length; i < len; i++){
+            albumname = albums[i].title;
+            $("#list1").push("<li><p> "+albumname+" </p></li>");
+        }
+        displaying = "albums";
     }
     if (displaying == "albums"){
         console.log(name);
         if(name == "<p> Aquemini </p>"){
             $("#list1").empty();
-            $("#list1").append("<li><p>Hold On, Be Strong (featuring The Four Phonics)<small>Outkast</small></p></li><li><p>Return of the 'G'<small>Outkast</small></p></li><li><p>Rosa Parks<small>Outkast</small></p></li><li><p>Skew It on the Bar-B (featuring Raekwon)<small>Outkast</small></p></li><li><p>Aquemini<small>Outkast</small></p></li><li><p>Synthesizer (featuring George Clinton)<small>Outkast</small></p></li><li><p>Slump (featuring BackBone and Cool Breeze)<small>Outkast</small></p></li><li><p>West Savannah<small>Outkast</small></p></li><li><p>Da Art of Storytellin' (Pt. 1)<small>Outkast</small></p></li><li><p>Da Art of Storytellin' (Pt. 2)<small>Outkast</small></p></li><li><p>Mamacita (featuring Masada and Witchdoctor)<small>Outkast</small></p></li><li><p>SpottieOttieDopaliscious (featuring Pat Brown)<small>Outkast</small></p></li><li><p>Y'All Scared (featuring T-Mo, Big Gipp and Khujo)<small>Outkast</small></p></li><li><p>Nathaniel<small>Outkast</small></p></li><li><p>Liberation (featuring Cee-Lo, Erykah Badu and Big Rube)<small>Outkast</small></p></li><li><p>Chonkyfire<small>Outkast</small></p></li>");     
+            $("#list1").push("<li><p>Hold On, Be Strong (featuring The Four Phonics)<small>Outkast</small></p></li><li><p>Return of the 'G'<small>Outkast</small></p></li><li><p>Rosa Parks<small>Outkast</small></p></li><li><p>Skew It on the Bar-B (featuring Raekwon)<small>Outkast</small></p></li><li><p>Aquemini<small>Outkast</small></p></li><li><p>Synthesizer (featuring George Clinton)<small>Outkast</small></p></li><li><p>Slump (featuring BackBone and Cool Breeze)<small>Outkast</small></p></li><li><p>West Savannah<small>Outkast</small></p></li><li><p>Da Art of Storytellin' (Pt. 1)<small>Outkast</small></p></li><li><p>Da Art of Storytellin' (Pt. 2)<small>Outkast</small></p></li><li><p>Mamacita (featuring Masada and Witchdoctor)<small>Outkast</small></p></li><li><p>SpottieOttieDopaliscious (featuring Pat Brown)<small>Outkast</small></p></li><li><p>Y'All Scared (featuring T-Mo, Big Gipp and Khujo)<small>Outkast</small></p></li><li><p>Nathaniel<small>Outkast</small></p></li><li><p>Liberation (featuring Cee-Lo, Erykah Badu and Big Rube)<small>Outkast</small></p></li><li><p>Chonkyfire<small>Outkast</small></p></li>");     
             displaying = "songs";
         }
         if(name == "<p> Stankonia </p>"){
             $("#list1").empty();
-            $("#list1").append("<li><p>Intro<small>Outkast</small></p></li><li><p>Gasoline Dreams (featuring Khujo)<small>Outkast</small></p></li><li><p>I'm Cool (Interlude)<small>Outkast</small></p></li><li><p>So Fresh, So Clean<small>Outkast</small></p></li><li><p>Ms. Jackson<small>Outkast</small></p></li><li><p>Snappin' & Trappin' (featuring Killer Mike and J-Sweet)<small>Outkast</small></p></li><li><p>D.F. (Interlude)<small>Outkast</small></p></li><li><p>Spaghetti Junction<small>Outkast</small></p></li><li><p>Kim & Cookie (Interlude)<small>Outkast</small></p></li><li><p>I'll Call Before I Come (featuring Gangsta Boo and Eco)<small>Outkast</small></p></li><li><p>B.O.B<small>Outkast</small></p></li><li><p>Xplosion (featuring B-Real)<small>Outkast</small></p></li><li><p>Good Hair (Interlude)<small>Outkast</small></p></li><li><p>We Luv Deez Hoez (featuring Backbone and Big Gipp)<small>Outkast</small></p></li><li><p>Humble Mumble (featuring Erykah Badu)<small>Outkast</small></p></li><li><p>Drinkin\' Again (Interlude)<small>Outkast</small></p></li><li><p>?<small>Outkast</small></p></li><li><p>Red Velvet<small>Outkast</small></p></li><li><p>Cruisin' in the ATL (Interlude)<small>Outkast</small></p></li><li><p>Gangsta Shit (featuring Slimm Calhoun, Blackowned C-Bone and T-Mo)<small>Outkast</small></p></li><li><p>Toilet Tisha<small>Outkast</small></p></li><li><p>Slum Beautiful (featuring Cee Lo Green)<small>Outkast</small></p></li><li><p>Pre-Nump (Interlude)<small>Outkast</small></p></li><li><p>Stankonia (Stanklove) (featuring Big Rube and Sleepy Brown)<small>Outkast</small></p></li>");
+            $("#list1").push("<li><p>Intro<small>Outkast</small></p></li><li><p>Gasoline Dreams (featuring Khujo)<small>Outkast</small></p></li><li><p>I'm Cool (Interlude)<small>Outkast</small></p></li><li><p>So Fresh, So Clean<small>Outkast</small></p></li><li><p>Ms. Jackson<small>Outkast</small></p></li><li><p>Snappin' & Trappin' (featuring Killer Mike and J-Sweet)<small>Outkast</small></p></li><li><p>D.F. (Interlude)<small>Outkast</small></p></li><li><p>Spaghetti Junction<small>Outkast</small></p></li><li><p>Kim & Cookie (Interlude)<small>Outkast</small></p></li><li><p>I'll Call Before I Come (featuring Gangsta Boo and Eco)<small>Outkast</small></p></li><li><p>B.O.B<small>Outkast</small></p></li><li><p>Xplosion (featuring B-Real)<small>Outkast</small></p></li><li><p>Good Hair (Interlude)<small>Outkast</small></p></li><li><p>We Luv Deez Hoez (featuring Backbone and Big Gipp)<small>Outkast</small></p></li><li><p>Humble Mumble (featuring Erykah Badu)<small>Outkast</small></p></li><li><p>Drinkin\' Again (Interlude)<small>Outkast</small></p></li><li><p>?<small>Outkast</small></p></li><li><p>Red Velvet<small>Outkast</small></p></li><li><p>Cruisin' in the ATL (Interlude)<small>Outkast</small></p></li><li><p>Gangsta Shit (featuring Slimm Calhoun, Blackowned C-Bone and T-Mo)<small>Outkast</small></p></li><li><p>Toilet Tisha<small>Outkast</small></p></li><li><p>Slum Beautiful (featuring Cee Lo Green)<small>Outkast</small></p></li><li><p>Pre-Nump (Interlude)<small>Outkast</small></p></li><li><p>Stankonia (Stanklove) (featuring Big Rube and Sleepy Brown)<small>Outkast</small></p></li>");
             displaying = "songs";
         }
         if(name == "<p> The College Dropout </p>"){
             $("#list1").empty();
-            $("#list1").append("<li><p>Intro<small>Kanye West</small></p></li><li><p>We Don't Care<small>Kanye West</small></p></li><li><p>Graduation Day<small>Kanye West</small></p></li><li><p>All Falls Down (featuring Syleena Johnson)<small>Kanye West</small></p></li><li><p>I'll Fly Away<small>Kanye West</small></p></li><li><p>Spaceship (featuring GLC and Consequence)<small>Kanye West</small></p></li><li><p>Jesus Walks<small>Kanye West</small></p></li><li><p>Never Let Me Down (featuring Jay-Z and J. Ivy)<small>Kanye West</small></p></li><li><p>Get Em High (featuring Talib Kweli and Common)<small>Kanye West</small></p></li><li><p>Workout Plan<small>Kanye West</small></p></li><li><p>The New Workout Plan<small>Kanye West</small></p></li><li><p>Slow Jamz (featuring Twista and Jamie Foxx)<small>Kanye West</small></p></li><li><p>Breathe In Breathe Out (featuring Ludacris)<small>Kanye West</small></p></li><li><p>School Spirit (Skit 1)<small>Kanye West</small></p></li><li><p>School Spirit<small>Kanye West</small></p></li><li><p>School Spirit (Skit 2)<small>Kanye West</small></p></li><li><p>Lil Jimmy (Skit)<small>Kanye West</small></p></li><li><p>Two Words (featuring Mos Def, Freeway and the Boys Choir of Harlem)<small>Kanye West</small></p></li><li><p>Through the Wire<small>Kanye West</small></p></li><li><p>Family Business<small>Kanye West</small></p></li><li><p>Last Call<small>Kanye West</small></p></li>");
+            $("#list1").push("<li><p>Intro<small>Kanye West</small></p></li><li><p>We Don't Care<small>Kanye West</small></p></li><li><p>Graduation Day<small>Kanye West</small></p></li><li><p>All Falls Down (featuring Syleena Johnson)<small>Kanye West</small></p></li><li><p>I'll Fly Away<small>Kanye West</small></p></li><li><p>Spaceship (featuring GLC and Consequence)<small>Kanye West</small></p></li><li><p>Jesus Walks<small>Kanye West</small></p></li><li><p>Never Let Me Down (featuring Jay-Z and J. Ivy)<small>Kanye West</small></p></li><li><p>Get Em High (featuring Talib Kweli and Common)<small>Kanye West</small></p></li><li><p>Workout Plan<small>Kanye West</small></p></li><li><p>The New Workout Plan<small>Kanye West</small></p></li><li><p>Slow Jamz (featuring Twista and Jamie Foxx)<small>Kanye West</small></p></li><li><p>Breathe In Breathe Out (featuring Ludacris)<small>Kanye West</small></p></li><li><p>School Spirit (Skit 1)<small>Kanye West</small></p></li><li><p>School Spirit<small>Kanye West</small></p></li><li><p>School Spirit (Skit 2)<small>Kanye West</small></p></li><li><p>Lil Jimmy (Skit)<small>Kanye West</small></p></li><li><p>Two Words (featuring Mos Def, Freeway and the Boys Choir of Harlem)<small>Kanye West</small></p></li><li><p>Through the Wire<small>Kanye West</small></p></li><li><p>Family Business<small>Kanye West</small></p></li><li><p>Last Call<small>Kanye West</small></p></li>");
             displaying = "songs";
         }
     }
@@ -191,31 +230,41 @@ $(document).on('click', '#list2 li', function(){
 $("#playlists").on("click", function(){
     console.log("playlists clicked");
     $('#list1').empty();
-    $('#list1').append("<li><p> Chilling </p></li><li><p> Dingus Status Swag </p></li><li><p> Happy </p></li><li><p> Running </p></li><li><p> Party </p></li>");
+    $('#list1').push("<li><p> Chilling </p></li><li><p> Dingus Status Swag </p></li><li><p> Happy </p></li><li><p> Running </p></li><li><p> Party </p></li>");
     displaying = "playlists";
 });
 $("#artists").on("click", function(){
     console.log("artists clicked");
     $('#list1').empty();
-    $('#list1').append("<li><p> Arcade Fire </p></li><li><p> Arctic Monkeys </p></li><li><p> The Beach Boys </p></li><li><p> The Beatles </p></li><li><p> Bob Dylan </p></li><li><p> The Clash </p></li><li><p> Disclosure </p></li><li><p> The Doors </p></li><li><p> Florence and The Machine </p></li><li><p> George Harrison </p></li><li><p> Gnarles Barkley </p></li><li><p> Gorillaz </p></li><li><p> Kanye West </p></li><li><p> The Kinks </p></li><li><p> LCD Soundsystem </p></li><li><p> Marvin Gaye </p></li><li><p> Nirvana </p></li><li><p> Outkast </p></li><li><p> The Notorious B.I.G. </p></li><li><p> The Smiths </p></li><li><p> Todd Terje </p></li><li><p> Wu-Tang Clan </p></li><li><p> The xx </p></li>");
+    for(val i = 0, len = artists.length; i < len; i++){
+        artistname = artists[i];
+        $('#list1').push("<li><p>" +artistname+ " </p></li><");
+    }
     displaying = "aritsts";
 });
 $("#genres").on("click", function(){
     console.log("genres clicked");
     $('#list1').empty();
-    $('#list1').append("<li><p> Ambient </p></li><li><p> Classical </p></li><li><p> Country </p></li><li><p> Dance </p></li><li><p> Electronic </p></li><li><p> Southern Slang </p></li><li><p> R & B </p></li><li><p> Rock & Roll </p></li><li><p> World Music </p></li>");
+    $('#list1').push("<li><p> Ambient </p></li><li><p> Classical </p></li><li><p> Country </p></li><li><p> Dance </p></li><li><p> Electronic </p></li><li><p> Southern Slang </p></li><li><p> R & B </p></li><li><p> Rock & Roll </p></li><li><p> World Music </p></li>");
     displaying = "genres";
 });
 $("#albums").on("click", function(){
     console.log("albums clicked");
     $('#list1').empty();
-    $('#list1').append("<li><p> Funeral </p></li><li><p> Reflektor </p></li><li><p> Whatever People Say I Am, That's What I'm Not </p></li><li><p> Pet Sounds </p></li><li><p> Abbey Road </p></li><li><p> Sgt. Pepper's Lonely Hearts Club Band </p></li><li><p> Blonde on Blonde </p></li><li><p> Highway 61 Revisited </p></li><li><p> The Clash </p></li><li><p> London Calling </p></li><li><p> You & Me (Flume) </p></li><li><p> The Doors </p></li><li><p> I Need Your Love </p></li><li><p> All Things Must Pass </p></li><li><p> Crazy </p></li><li><p> Demon Days </p></li><li><p> My Beautiful Dark Twisted Fantasy </p></li><li><p> Something Else by The Kinks </p></li><li><p> Losing My Edge </p></li><li><p> The College Dropout </p></li><li><p> What's Goin On? </p></li><li><p> In Utero </p></li><li><p> Nevermind </p></li><li><p> Ready to Die </p></li><li><p> Aquemini </p></li><li><p> The Love Below </p></li><li><p> Stankonia </p></li><li><p> The Queen is Dead </p></li><li><p> It's The Arps </p></li><li><p> Spiral </p></li><li><p> Enter The Wu-Tang: 36 Chambers </p></li>");
+    for(val i = 0, len = albums.length; i < len; i++){
+        albumname = album.title
+        $('#list1').push("<li><p> "+albumname+" </p></li>");
+    }
     displaying = "albums";
 });
 $("#songs").on("click", function(){
     console.log("songs clicked");
     $('#list1').empty();
-    $('#list1').append("<li><p>Intro<small>Outkast</small></p></li><li><p>Gasoline Dreams (featuring Khujo)<small>Outkast</small></p></li><li><p>I'm Cool (Interlude)<small>Outkast</small></p></li><li><p>So Fresh, So Clean<small>Outkast</small></p></li><li><p>Ms. Jackson<small>Outkast</small></p></li><li><p>Snappin\' & Trappin\' (featuring Killer Mike and J-Sweet)<small>Outkast</small></p></li><li><p>D.F. (Interlude)<small>Outkast</small></p></li><li><p>Spaghetti Junction<small>Outkast</small></p></li><li><p>Kim & Cookie (Interlude)<small>Outkast</small></p></li><li><p>I'll Call Before I Come (featuring Gangsta Boo and Eco)<small>Outkast</small></p></li><li><p>B.O.B<small>Outkast</small></p></li><li><p>Xplosion (featuring B-Real)<small>Outkast</small></p></li><li><p>Good Hair (Interlude)<small>Outkast</small></p></li><li><p>We Luv Deez Hoez (featuring Backbone and Big Gipp)<small>Outkast</small></p></li><li><p>Humble Mumble (featuring Erykah Badu)<small>Outkast</small></p></li><li><p>Drinkin' Again (Interlude)<small>Outkast</small></p></li><li><p>?<small>Outkast</small></p></li><li><p>Red Velvet<small>Outkast</small></p></li><li><p>Cruisin' in the ATL (Interlude)<small>Outkast</small></p></li><li><p>Gangsta Shit (featuring Slimm Calhoun, Blackowned C-Bone and T-Mo)<small>Outkast</small></p></li><li><p>Toilet Tisha<small>Outkast</small></p></li><li><p>Slum Beautiful (featuring Cee Lo Green)<small>Outkast</small></p></li><li><p>Pre-Nump (Interlude)<small>Outkast</small></p></li><li><p>Stankonia (Stanklove) (featuring Big Rube and Sleepy Brown)<small>Outkast</small></p></li><li><p>Intro<small>Kanye West</small></p></li>  <li><p>We Don't Care<small>Kanye West</small></p></li><li><p>Graduation Day<small>Kanye West</small></p></li>  <li><p>All Falls Down (featuring Syleena Johnson)<small>Kanye West</small></p></li><li><p>I'll Fly Away<small>Kanye West</small></p></li>  <li><p>Spaceship (featuring GLC and Consequence)<small>Kanye West</small></p></li><li><p>Jesus Walks<small>Kanye West</small></p></li><li><p>Never Let Me Down (featuring Jay-Z and J. Ivy)<small>Kanye West</small></p></li><li><p>Get Em High (featuring Talib Kweli and Common)<small>Kanye West</small></p></li><li><p>Workout Plan<small>Kanye West</small></p></li><li><p>The New Workout Plan<small>Kanye West</small></p></li><li><p>Slow Jamz (featuring Twista and Jamie Foxx)<small>Kanye West</small></p></li><li><p>Breathe In Breathe Out (featuring Ludacris)<small>Kanye West</small></p></li><li><p>School Spirit (Skit 1)<small>Kanye West</small></p></li><li><p>School Spirit<small>Kanye West</small></p></li><li><p>School Spirit (Skit 2)<small>Kanye West</small></p></li><li><p>Lil Jimmy (Skit)<small>Kanye West</small></p></li><li><p>Two Words (featuring Mos Def, Freeway and the Boys Choir of Harlem)<small>Kanye West</small></p></li><li><p>Through the Wire<small>Kanye West</small></p></li><li><p>Family Business<small>Kanye West</small></p></li><li><p>Last Call<small>Kanye West</small></p></li><li><p>Hold On, Be Strong (featuring The Four Phonics)<small>Outkast</small></p></li><li><p>Return of the 'G'<small>Outkast</small></p></li><li><p>Rosa Parks<small>Outkast</small></p></li> <li><p>Skew It on the Bar-B (featuring Raekwon)<small>Outkast</small></p></li> <li><p>Aquemini<small>Outkast</small></p></li> <li><p>Synthesizer (featuring George Clinton)<small>Outkast</small></p></li> <li><p>Slump (featuring BackBone and Cool Breeze)<small>Outkast</small></p></li><li><p>West Savannah<small>Outkast</small></p></li> <li><p>Da Art of Storytellin' (Pt. 1)<small>Outkast</small></p></li> <li><p>Da Art of Storytellin' (Pt. 2)<small>Outkast</small></p></li><li><p>Mamacita (featuring Masada and Witchdoctor)<small>Outkast</small></p></li><li><p>SpottieOttieDopaliscious (featuring Pat Brown)<small>Outkast</small></p></li><li><p>Y\'All Scared (featuring T-Mo, Big Gipp and Khujo)<small>Outkast</small></p></li> <li><p>Nathaniel<small>Outkast</small></p></li><li><p>Liberation (featuring Cee-Lo, Erykah Badu and Big Rube)<small>Outkast</small></p></li> <li><p>Chonkyfire<small>Outkast</small></p></li>");
+    for(val i = 0, len = albums.length; i < len; i++){
+        songname = songs[i].title;
+        artist = songs[i].artist;
+        $('#list1').push("<li><p>"+songname+"<small> "+artist+" </small></p>");
+    }
     displaying = "songs";
 });
 //***********************************************************************//
