@@ -65,6 +65,7 @@ $('input[type=file]').change(function(e){
             url: objectURL,
             autoplay: false
     });
+    $("#artists").trigger('click');
    /* soundManager.play(mySound.id, {
             multiShotEvents: true
     }); */
@@ -138,8 +139,8 @@ function addtoContainers(fileindex, filepath){
 $(document).ready(function() {
     mainlist = new Array();
     queue = new Array();
-    $("#artists").trigger('click');
-
+   // $("#artists").trigger('click');
+    $("#playlists").trigger('click');
     soundManager.setup({
         url: '/path/to/swf-directory/',
         onready: function() {
@@ -237,9 +238,9 @@ $("#playlists").on("click", function(){
 $("#artists").on("click", function(){
     console.log("artists clicked");
     $('#list1').empty();
-    for(val i = 0, len = artists.length; i < len; i++){
+    for(var i = 0, len = artists.length; i < len; i++){
         artistname = artists[i];
-        $('#list1').append("<li><p>" +artistname+ " </p></li><");
+        $('#list1').append("<li><p>" +artistname+ " </p></li>");
     }
     displaying = "aritsts";
 });
@@ -252,7 +253,7 @@ $("#genres").on("click", function(){
 $("#albums").on("click", function(){
     console.log("albums clicked");
     $('#list1').empty();
-    for(val i = 0, len = albums.length; i < len; i++){
+    for(var i = 0, len = albums.length; i < len; i++){
         albumname = album.title
         $('#list1').append("<li><p> "+albumname+" </p></li>");
     }
@@ -261,7 +262,7 @@ $("#albums").on("click", function(){
 $("#songs").on("click", function(){
     console.log("songs clicked");
     $('#list1').empty();
-    for(val i = 0, len = albums.length; i < len; i++){
+    for(var i = 0, len = albums.length; i < len; i++){
         songname = songs[i].title;
         artist = songs[i].artist;
         $('#list1').append("<li><p>"+songname+"<small> "+artist+" </small></p>");
