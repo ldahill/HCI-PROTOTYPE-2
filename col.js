@@ -264,7 +264,7 @@ $("#songs").on("click", function(){
     for(val i = 0, len = albums.length; i < len; i++){
         songname = songs[i].title;
         artist = songs[i].artist;
-        $('#list1').push("<li><p>"+songname+"<small> "+artist+" </small></p>");
+        $('#list1').append("<li><p>"+songname+"<small> "+artist+" </small></p>");
     }
     displaying = "songs";
 });
