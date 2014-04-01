@@ -1,0 +1,269 @@
+html {
+	margin:0;
+	padding:0;
+	color:#000;
+	height: 100%;
+	background: 
+      linear-gradient(
+      	180deg,
+      	rgba(110, 121, 129, 0.45),
+      	rgba(29, 3, 48, 0.35)
+      ),
+ 	  url('grey_wash_wall.png');
+/*
+	background: 
+      linear-gradient(
+      	180deg,
+      	rgba(29, 3, 48, 0.45),
+      	rgba(29, 3, 48, 0.35)
+      ),
+ 	  url('grey_wash_wall.png');*/
+}
+body{
+	margin:0;
+}
+h2,p{
+	font-family: 'Francois One', sans-serif;
+}
+
+/*--------------------------*/
+/*---Genre Selector Style---*/
+/*--------------------------*/
+#dropdown, #Qcontrols{
+	display:table;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:0px;
+	margin-bottom:0px;
+	padding:0px;
+	position: relative;
+}
+#dropdown li, #Qcontrols li{
+	width: 80px;
+	height:20px;
+}
+#genre, #genrelink, .musbutton{
+	background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
+	box-shadow: 0px 0px 9px rgba(0,0,0,0.15);
+	padding: 0 0px;
+	border-radius: 5px;
+	list-style: none;
+	position: relative;
+	display: inline-table;
+	cursor: pointer;
+	font-size:13px;
+	border-top: 0px;
+    border-bottom: 0px;
+}
+#genre p, #genrelink p, .musbutton p{
+	/*color: #757575; */
+	text-decoration: none;
+	margin:0px;
+	vertical-align: middle;
+}
+#genre, #dropdown:hover #genrelink{
+	background: -webkit-linear-gradient(top, #4f5964 0%,#5f6975 40%);
+	color: #fff;
+}
+#dropdown ul {
+	background: #5f6975; 
+	border-radius: 0px; 
+	padding: 0;
+	position: absolute;
+    top: 100%;
+    height: 125px;
+    overflow: scroll;
+    display:none;
+}
+#genre {
+	float: none; 
+	border-top: 1px solid #6b727c;
+	border-bottom: 1px solid #575f6a;
+	position: relative;
+}
+#genre p:hover {
+	background: #4b545f;
+}
+
+#genrelink:hover + ul, #dropdown ul:hover{
+	display:block;
+}
+
+
+/*--------------------------*/
+/*--------------------------*/
+/*--------------------------*/
+
+#Col1, #Col2{
+	background-color: #FFFFFF;
+	border-radius: 5px;
+	border: 1px solid #9C9C9C;
+	margin-top: 10px;
+}
+
+#list1 li, #list2 li{
+	border-top: 1px solid #C0C0C0;
+	border-bottom: 1px solid #C0C0C0;
+
+}
+#list1 li:first-child, #list2 li:first-child{
+	border-top: 1px solid #FFF;
+}
+
+#list1, #list2{
+	list-style: none;
+	height: 450px;
+	overflow: scroll;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin: 0px;
+}
+
+.playing{
+	/*background: #700000;*/
+}
+.playing p{
+	background: url("playing.png") no-repeat;
+	background-size: 20px 18px;
+	background-position-y: 50%;
+	padding-left: 25px;
+}
+.paused p{
+	background: url("paused.png") no-repeat;
+	background-size: 20px 18px;
+	background-position-y: 50%;
+	padding-left: 25px;
+}
+
+#list1 li:hover{
+	background: #F2F2F2;
+}
+
+#list2 li:hover{
+	background: #C1F0F6;
+}
+li:hover{
+	cursor: pointer;
+}
+#list1 li:hover > p, #list2 li:hover > p{
+	margin-left: 5px;
+}
+#ColContainer, #foot{
+	width:100%;
+	margin:0 auto;
+}
+#Col1{
+	float: left;
+	width:35%;
+}
+#colsep{
+	position: relative;
+	left:50%;
+	height: 100%;
+    width: 1px;
+    border-left: 1px solid #C0C0C0;
+}
+#Col2{
+	float: left;
+	margin-left: 5%;
+	width: 35%;
+}
+
+#foot{
+	padding-top: 5px;
+	clear: both;
+}
+
+h2{
+	text-transform: uppercase;
+}
+
+#maintitle, #qtitle{
+	margin:0px;
+
+}
+
+.colheader{
+	text-align: center;
+	padding: 19.92px;
+	margin: 0px;
+	background: linear-gradient(        180deg,        rgba(185, 35, 34, 0.55),         rgba(185, 35, 34, 0.35)    ),     url('grey_wash_wall.png');
+	/*background: linear-gradient(        180deg,        rgba(20, 127, 204, 0.35),         rgba(20, 127, 204, 0.55)    ),     url('grey_wash_wall.png');
+	background: linear-gradient(        180deg,        rgba(63, 128, 180, 0.35),         rgba(63, 128, 180, 0.55)       ),     url('grey_wash_wall.png');*/
+}
+.sidebar{
+	float: left;	
+}
+.sidebar ul{
+	list-style: none;
+	margin-top: 10px;
+	border-top: 1px;
+}
+.sidebar li{
+	height: 45px;
+	background-color: #FFFFFF;
+	border-top: 1px solid #C0C0C0;
+	border-bottom: 1px solid #C0C0C0;
+	border-left: 1px solid #C0C0C0;
+}
+.sidebar p{
+	text-align: center;
+}
+#playbar ul{
+	width: 100px;
+	padding-left: 0px;
+}
+.sidebar li:first-child{
+}
+#brwseback{
+	position: relative;
+	left: -150px;
+	top: -10px;
+}
+/*
+#tfheader{
+		background-color:#c3dfef;
+	}
+	#tfnewsearch{
+		float:right;
+		padding:20px;
+	}
+	.tftextinput{
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		border:1px solid #0076a3; border-right:0px;
+		border-top-left-radius: 5px 5px;
+		border-bottom-left-radius: 5px 5px;
+	}
+	.tfbutton {
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		outline: none;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		color: #ffffff;
+		border: solid 1px #0076a3; border-right:0px;
+		background: #0095cd;
+		background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+		background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+		border-top-right-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+	}
+	.tfbutton:hover {
+		text-decoration: none;
+		background: #007ead;
+		background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+		background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+	}
+	/* Fixes submit button height problem in Firefox */
+	/*.tfbutton::-moz-focus-inner {
+	  border: 0;
+	}
+	.tfclear{
+		clear:both;
+	}*/

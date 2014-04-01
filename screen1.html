@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Luke">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
+    <title>Lava and Tonic</title>
+  </head>
+
+  <body>
+
+    <div id="ColContainer" role="navigation">
+      <!--<ul id="genre_selector"></ul>-->
+      <div class = "sidebar" id = "browsebar">
+          <ul>
+            <li id = "playlists"><p>Playlists</p></li>
+            <li id = "genres"><p>Genres</p></li>
+            <li id = "artists"><p>Artists</p></li>
+            <li id = "albums"><p>Albums</p></li>
+            <li id = "songs"><p>Songs</p></li>
+          </ul>
+        </div>
+      <div id="Col1">
+        <div class="colheader" id = "browseheader">
+          <button id="brwseback" onclick="goBack()">Go Back</button>
+          <h2 id="maintitle">Browse</h2>
+          
+          <!--<div id="tfheader">
+            <form id="tfnewsearch" method="get" action="http://www.google.com">
+             <input type="text" class="tftextinput" name="q" size="21" maxlength="120"><input type="submit" value="search" class="tfbutton">
+            </form>
+            <div class="tfclear"></div>
+          </div>-->
+        </div>
+        <div id="list1div">
+          <ul id="list1">
+
+         <li><p> Look How Far Weve Come <small>Imagine Dragons</small></p></li>
+
+         <li><p> Tokyo <small>Imagine Dragons</small></p></li><li><p> Leave Me <small>Imagine Dragons</small></p></li><li><p> Roadie <small>Tenacious D</small></p></li><li><p> They Fucked Our Asses <small>Tenacious D</small></p></li><li><p> Senorita <small>Tenacious D</small></p></li><li><p> To Be The Best <small>Tenacious D</small></p></li><li><p> 39 <small>Tenacious D</small></p></li><li><p> Deth Starr <small>Tenacious D</small></p></li><li><p> Classical Teacher <small>Tenacious D</small></p></li><li><p> Disturbed - Down with the Sickness <small>zackey</small></p></li><li><p> Linkin Park - Bleed It Out <small>Vighnesh Jaikumar</small></p></li><li><p> Rize Of The Fenix <small>Tenacious D</small></p></li><li><p> Queen   'We Will Rock You' <small>user7941120</small></p></li><li><p> I Will Not Bow-Breaking Benjamin <small>rocknrollfan</small></p></li><li><p> Si Estás Pensando Mal De Mí <small>Los Bunkers</small></p></li><li><p> Black Chandelier <small>Biffy Clyro</small></p></li><li><p> Sabado <small>Los Bunkers</small></p></li><li><p> 'The Christmas Song (Chestnuts Roasting On An Open Fire)' - from 'Complete Kisses' <small>Paul McCartney</small></p></li><li><p> Ready To Start (Arcade Fire Cover) <small>TearsForFears</small></p></li><li><p> Breaking Benjamin - So Cold <small>mikester84topdawg</small></p></li><li><p> La Estacion Final <small>Los Bunkers</small></p></li><li><p> Red Hot Chili Peppers - Fat Dance [Alternate Master] <small>RHCPExclusivetv</small></p></li><li><p> Hotel California <small>Ultimate Eagles</small></p></li><li><p> Castle of Glass - Linkin Park <small>LinparUnleashed</small></p></li><li><p> Sur <small>Los Bunkers</small></p></li><li><p> Dicen <small>Los Bunkers</small></p></li><li><p> La Maldicion De Mi Pais <small>Los Bunkers</small></p></li><li><p> Black Veil Brides-Fallen Angels <small>Yuuki Barrios</small></p></li><li><p> You Were Good <small>jimmyeatworld</small></p></li><li><p> Purple Yellow Red and Blue <small>Portugal. The Man</small></p></li><li><p> Damage <small>jimmyeatworld</small></p></li><li><p> Acdc - back in black <small>Gabriiell Cruz</small></p></li><li><p> Byebyelove <small>jimmyeatworld</small></p></li><li><p> How'd You Have Me <small>jimmyeatworld</small></p></li><li><p> Please Say No <small>jimmyeatworld</small></p></li><li><p> Book of Love <small>jimmyeatworld</small></p></li><li><p> Stingin' Belle <small>Biffy Clyro</small></p></li><li><p> Holdin' On To Black Metal <small>MY MORNING JACKET</small></p></li><li><p> Three Days Grace - Pain <small>Jwizzle1988</small></p></li><li><p> My Best Theory <small>jimmyeatworld</small></p></li><li><p> Nickelback - Trying Not To Love You <small>Trieu Thong Nguyen</small></p></li><li><p> Red Hot Chili Peppers - Fat Dance - [iTunes Bonus Track] <small>RHCPExclusivetv</small></p></li><li><p> Bon Jovi - Bed Of Roses <small>apadstairsbeachresort</small></p></li><li><p> Drowning Pool - Bodies (Let The Bodies Hit The Floor) <small>Marcelo X Oliveira</small></p></li><li><p> Falak - Tu Mera Dil [www.pmm.net.pk] <small>Pakistan Music Mind - PMM</small></p></li><li><p> Oasis vs Paramore - Wonderwall Brick (Rock Mix\Mashup) Sully Mashup <small>Mixes and Mashups #11</small></p></li><li><p> Nickelback - Hero <small>SamuraiRedfield</small></p></li><li><p> Charlie Brown Jr. - Um Dia a Gente Se Encontra <small>João Alberto Gonzalez</small></p></li>           </ul>
+        </div>
+      </div>
+
+      <div id="Col2">
+        <div class= "colheader">
+          <h2 id = "qtitle">Play Queue</h2>
+          <ul id = "Qcontrols">
+            <li class="musbutton" id="backbutton"><p>Skip Back</p></li>
+            <li class="musbutton" id="play/pause"><p>Play</p></li>
+            <li class="musbutton" id="fwdbutton"><p>Skip Forward</p></li>
+          </ul>
+        </div>
+        <div id="list2div">
+          <ul id="list2">
+         <!-- <li class = "playing"><p> Disturbed - Down with the Sickness <small>zackey</small></p></li><li><p> They Fucked Our Asses <small>Tenacious D</small></p></li><li><p> Look How Far Weve Come <small>Imagine Dragons</small></p></li><li><p> Senorita <small>Tenacious D</small></p></li><li><p> Queen   'We Will Rock You' <small>user7941120</small></p></li> -->
+          </ul>
+        </div>
+      </div>
+      <div class = "sidebar" id = "playbar">
+        <ul>
+          <li><p>Toggle Display</p></li>
+          <li><p>Make Playlist</p></li>
+        </ul>
+      </div>
+    </div>
+    <div id="foot">
+      <p> This is below the columns. Yea.</p>
+    </div>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="soundmanager2.js"></script>
+    <script src="//connect.soundcloud.com/sdk.js"></script>
+    <script src="col.js"></script>
+  </body>
+</html>
