@@ -23,7 +23,6 @@ function playSound(queueindex){
             $('#list2 li').eq(now_playing_index).removeClass("playing");
             $('#list2 li').eq(now_playing_index).removeClass("paused");
         }
-       // console.log(queueindex, queue())
         file = songfiles[queue[queueindex].fileindex];
         console.log(songfiles);
         var objectURL = window.URL.createObjectURL(file);
@@ -38,7 +37,6 @@ function playSound(queueindex){
                 isstreaming = false;
                 $('#list2 li').eq(now_playing_index).removeClass("playing");
                 $('#list2 li').eq(now_playing_index).removeClass("paused");
-                now_playing_index = -1;
                 if(queueindex < queue.length){
                     playSound(queueindex + 1)
                 }
@@ -326,11 +324,20 @@ $("#playbutton").on("click", function(){
     console.log("Play clicked");
     htmltext = $(this).html();
     console.log(htmltext);
-    if( htmltext == "<p>Pause</p>"){
-        $(this).html("<p>Play</p>");
-    }
-    if(htmltext == "<p>Play</p>"){
-        $(this).html("<p>Pause</p>");
+    if(queue.length > 0){
+        if( htmltext == "<p>Pause</p>"){
+            playSound(now_playing_index);
+            $(this).html("<p>Play</p>");
+        }
+        else if(htmltext == "<p>Play</p>"){
+            if(now_playing_index == -1){
+                playSound(0);
+            }
+            else{
+                playSound(now_playing_index);
+            }
+            $(this).html("<p>Pause</p>");
+        }
     }
 });
 
