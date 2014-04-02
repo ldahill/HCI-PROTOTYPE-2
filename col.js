@@ -252,7 +252,7 @@ $(document).on('click', '#list2 li', function(){
 //Each one will clear and update the Browse Menu's display
 $("#playlists").on("click", function(){
     console.log("playlists clicked");
- /*   $('#list1').empty();
+ /* $('#list1').empty();
     $('#list1').append();
     displaying = "playlists";
     isSubset = false;*/
@@ -263,13 +263,14 @@ $("#artists").on("click", function(){
     for(var i = 0, len = artists.length; i < len; i++){
         artistname = artists[i].title;
         $('#list1').append("<li><p>" +artistname+ " </p></li>");
-    }
+    };
     displaying = "artists";
     isSubset = false;
+    setdisplaybuttoncolor('#EEEEEE');
 });
 $("#genres").on("click", function(){
     console.log("genres clicked");
- /*   $('#list1').empty();
+ /* $('#list1').empty();
     $('#list1').append();
     displaying = "genres";
     isSubset = false;*/
@@ -281,8 +282,10 @@ $("#albums").on("click", function(){
         albumname = albums[i].title;
         $('#list1').append("<li><p> "+albumname+" </p></li>");
     }
+    setdisplaybuttoncolor();
     displaying = "albums";
     isSubset = false;
+    setdisplaybuttoncolor('#EEEEEE');
 });
 $("#songs").on("click", function(){
     console.log("songs clicked");
@@ -292,12 +295,20 @@ $("#songs").on("click", function(){
         artist = songs[i].artist;
         $('#list1').append("<li><p>"+songname+"<small> "+artist+" </small></p>");
     }
+    setdisplaybuttoncolor('#FFFFFF');
     displaying = "songs";
     isSubset = false;
+    setdisplaybuttoncolor('#EEEEEE');
 });
 //***********************************************************************//
 //***********************************************************************//
-
+function  setdisplaybuttoncolor(color){
+    $("#artists").css('background-color','#FFFFFF');
+    $("#albums").css('background-color','#FFFFFF');
+    $("#songs").css('background-color','#FFFFFF');
+    buttonid = '#' + displaying;
+    $(buttonid).css('background-color',color);
+}
 
 //click causes playing to skip to prev track
 $("#backbutton").on("click", function(){

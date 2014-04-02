@@ -3,7 +3,9 @@ html {
 	padding:0;
 	color:#000;
 	height: 100%;
-	background: 
+	background-color: rgba(110, 121, 129, 0.45);
+	background: url('grey_wash_wall.png');
+/*	background: 
       linear-gradient(
       	180deg,
       	rgba(110, 121, 129, 0.45),
