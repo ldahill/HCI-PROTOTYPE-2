@@ -73,18 +73,7 @@ function playSound(queueindex){
 $('input[type=file]').change(function(e){
     files = e.target.files;
     organizeFiles(files);
-    file = files[40];
-    var objectURL = window.URL.createObjectURL(file);
-    console.log('created object url: %o', objectURL);
-    mySound = soundManager.createSound({
-            id: 'track_'+files[40].name,
-            url: objectURL,
-            autoplay: false
-    });
     $("#artists").trigger('click');
-   /* soundManager.play(mySound.id, {
-            multiShotEvents: true
-    }); */
 });
 
 function organizeFiles(files){
@@ -107,7 +96,10 @@ function addtoContainers(fileindex, filepath){
     artist = pathlist[pathlist.length-3];
     found = false;
 
-    almosttitle = name.split(".")[0];
+    almosttitle = name.split(".");
+    almosttitle.pop();
+    almosttitle = almosttitle.join(".");
+    console.log(almosttitle);
     song = {title: almosttitle.slice(3, almosttitle.length),album: album,
             artist: artist,fileindex:fileindex, isqd: false}; 
     songs.push(song);
@@ -121,11 +113,8 @@ function addtoContainers(fileindex, filepath){
         }
     }
     if(found == false){
-        alb = new Object();
-        alb.title = album;
-        alb.songindices = [];
+        alb = {title: album, songindices: [], artist: artist}; 
         alb.songindices.push(songindex);
-        alb.artist = artist;
         albums.push(alb);
         for(var i = 0, len = artists.length; i < len; i++){
             art = artists[i];
@@ -135,9 +124,7 @@ function addtoContainers(fileindex, filepath){
             }
         }
         if(found == false){
-            art = new Object();
-            art.title = artist;
-            art.albumindices = [];
+            art = {title: artist, albumindices: []}; 
             art.albumindices.push(albums.length - 1);
             artists.push(art);
         }
@@ -265,10 +252,10 @@ $(document).on('click', '#list2 li', function(){
 //Each one will clear and update the Browse Menu's display
 $("#playlists").on("click", function(){
     console.log("playlists clicked");
-    $('#list1').empty();
-    $('#list1').append("<li><p> Chilling </p></li><li><p> Dingus Status Swag </p></li><li><p> Happy </p></li><li><p> Running </p></li><li><p> Party </p></li>");
+ /*   $('#list1').empty();
+    $('#list1').append();
     displaying = "playlists";
-    isSubset = false;
+    isSubset = false;*/
 });
 $("#artists").on("click", function(){
     console.log("artists clicked");
@@ -282,10 +269,10 @@ $("#artists").on("click", function(){
 });
 $("#genres").on("click", function(){
     console.log("genres clicked");
-    $('#list1').empty();
-    $('#list1').append("<li><p> Ambient </p></li><li><p> Classical </p></li><li><p> Country </p></li><li><p> Dance </p></li><li><p> Electronic </p></li><li><p> Southern Slang </p></li><li><p> R & B </p></li><li><p> Rock & Roll </p></li><li><p> World Music </p></li>");
+ /*   $('#list1').empty();
+    $('#list1').append();
     displaying = "genres";
-    isSubset = false;
+    isSubset = false;*/
 });
 $("#albums").on("click", function(){
     console.log("albums clicked");
