@@ -89,19 +89,30 @@ function organizeFiles(files){
     console.log(albums);
 }
 
+function cleansongname(name){
+    namearray = name.split(".");
+    namearray.pop();
+    songtitle = namearray.join(".");
+    namearray = songtitle.split(" ");
+    if(!isNaN(namearray[0])){
+        namearray.shift();
+    }
+    if(namearray[0] == '-'){
+         namearray.shift();
+    }
+    return namearray.join(" ");
+}
 function addtoContainers(fileindex, filepath){
     pathlist = filepath.split("/");
     name = pathlist[pathlist.length-1];
     album = pathlist[pathlist.length-2];
     artist = pathlist[pathlist.length-3];
     found = false;
-
-    almosttitle = name.split(".");
-    almosttitle.pop();
-    almosttitle = almosttitle.join(".");
-    console.log(almosttitle);
-    song = {title: almosttitle.slice(3, almosttitle.length),album: album,
-            artist: artist,fileindex:fileindex, isqd: false}; 
+    console.log(name);
+    songname = cleansongname(name);
+    console.log(songname);
+    song = {title: songname,album: album, artist: artist,fileindex:fileindex,
+           isqd: false}; 
     songs.push(song);
     songindex = songs.length - 1;
 

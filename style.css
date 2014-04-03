@@ -202,7 +202,8 @@ h2{
 	text-align: center;
 	padding: 19.92px;
 	margin: 0px;
-	background: linear-gradient(        180deg,        rgba(185, 35, 34, 0.55),         rgba(185, 35, 34, 0.35)    ),     url('grey_wash_wall.png');
+	background-color: #4A5F70;
+	/*background: linear-gradient(        180deg,        rgba(185, 35, 34, 0.55),         rgba(185, 35, 34, 0.35)    ),     url('grey_wash_wall.png');
 	/*background: linear-gradient(        180deg,        rgba(20, 127, 204, 0.35),         rgba(20, 127, 204, 0.55)    ),     url('grey_wash_wall.png');
 	background: linear-gradient(        180deg,        rgba(63, 128, 180, 0.35),         rgba(63, 128, 180, 0.55)       ),     url('grey_wash_wall.png');*/
 }
@@ -232,8 +233,8 @@ h2{
 }
 #brwseback{
 	position: relative;
-	left: -46%;
 	width: 13%;
+	float: left;
 }
 /*
 #tfheader{
