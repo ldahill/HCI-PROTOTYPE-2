@@ -233,7 +233,8 @@ h2{
 }
 #brwseback{
 	position: relative;
-	width: 13%;
+	height: 28px;
+	width: 41px;
 	float: left;
 }
 
@@ -283,7 +284,7 @@ h2{
     line-height: 65px;
     font-size: 20px;
     color: rgba(0,0,0,.5);
-    margin-left: 4%;
+    margin-left: 2%;
 }
 
 input[type="file"]{
