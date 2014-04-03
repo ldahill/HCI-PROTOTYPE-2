@@ -46,21 +46,21 @@ function playSound(queueindex){
         isstreaming = true;
         ispaused = false;
         $('#list2 li').eq(queueindex).removeClass("paused").addClass("playing"); 
-        $("#playbutton").html("<p>Pause</p>");      
+        $("#playbutton").html("<img src=\"pausebutton.png\" id=\"pauseimg\">");      
     }
     else if(ispaused){
         mySound.play();
         isstreaming = true;
         ispaused = false;
         $('#list2 li').eq(now_playing_index).removeClass("paused").addClass("playing");
-        $("#playbutton").html("<p>Pause</p>");    
+        $("#playbutton").html("<img src=\"pausebutton.png\" id=\"pauseimg\">");    
     }
     else {
         mySound.pause();
         isstreaming = false;
         ispaused = true;
         $('#list2 li').eq(now_playing_index).removeClass("playing").addClass("paused");
-        $("#playbutton").html("<p>Play</p>");    
+        $("#playbutton").html("<img src=\"playbutton.png\" id=\"playimg\">");    
     }
 }
 
@@ -302,7 +302,7 @@ $("#songs").on("click", function(){
 });
 //***********************************************************************//
 //***********************************************************************//
-function  setdisplaybuttoncolor(color){
+function setdisplaybuttoncolor(color){
     $("#artists").css('background-color','#FFFFFF');
     $("#albums").css('background-color','#FFFFFF');
     $("#songs").css('background-color','#FFFFFF');
@@ -323,18 +323,18 @@ $("#playbutton").on("click", function(){
     htmltext = $(this).html();
     console.log(htmltext);
     if(queue.length > 0){
-        if( htmltext == "<p>Pause</p>"){
+        if(htmltext == "<img src=\"pausebutton.png\" id=\"pauseimg\">"){
             playSound(now_playing_index);
-            $(this).html("<p>Play</p>");
+            $(this).html("<img src=\"playbutton.png\" id=\"playimg\">");
         }
-        else if(htmltext == "<p>Play</p>"){
+        else if(htmltext == "<img src=\"playbutton.png\" id=\"playimg\">"){
             if(now_playing_index == -1){
                 playSound(0);
             }
             else{
                 playSound(now_playing_index);
             }
-            $(this).html("<p>Pause</p>");
+            $(this).html("<img src=\"pausebutton.png\" id=\"pauseimg\">");
         }
     }
 });
