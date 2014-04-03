@@ -71,6 +71,8 @@ function playSound(queueindex){
 });*/
 
 $('input[type=file]').change(function(e){
+    $('#cover').remove();
+    $('#intro').remove();
     files = e.target.files;
     organizeFiles(files);
     $("#artists").trigger('click');

@@ -27,7 +27,7 @@
           <!--<button id="brwseback" onclick="goBack()">Go Back</button>-->
           <img src="gobackbutton.png" id="brwseback">
           <h2 id="maintitle">Browse</h2>
-          
+
         </div>
         <div id="list1div">
           <ul id="list1"></ul>
@@ -60,10 +60,18 @@
       </div>
 
     </div>
-    <div id="foot">
+    <div id = "cover"></div>
+    <div id="intro">
+      <h1 id="welcome">Hello and Welcom to Spottie Ottie. To start drag and drop your iTunes Music folder into the box below. Alternatively, click the box to open up a file browsing window. </h1>
+      <div id = "fileholder">
+        <p>Drop files here...</p>
+        <input type="file" multiple webkitdirectory id="fileURL"/>
+      </div>
+    </div>
+ <!--   <div id="foot">
       <input type="file" multiple webkitdirectory id="fileURL"/>
       <ul id="fileOutput"></ul>
-    </div>  
+    </div>  -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="soundmanager2.js"></script>
     <script src="col.js"></script>

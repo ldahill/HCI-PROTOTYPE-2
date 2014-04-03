@@ -236,6 +236,62 @@ h2{
 	width: 13%;
 	float: left;
 }
+
+
+
+#cover{
+	position: absolute; 
+	top: 0; 
+	left: 0;
+	height: 100%;
+	width: 100%;
+	padding: 0px;
+	background-color: #000000;
+	opacity: 0.9;
+}
+
+#intro{
+	position: absolute; 
+	top: 0; 
+	left: 0;
+	height: 100%;
+	width: 100%;
+	padding: 0px;
+}
+
+#welcome{
+	margin-top: 10%;
+	margin-left: 20%;
+	margin-right: 20%;
+	text-align: center;
+	font-family: Arial;
+	font-size: 20px;
+	color: #FFFFFF;
+}
+#fileholder { 
+	margin-left: 40%;
+	height: 100px;
+	width: 200px;
+	border: 2px dashed rgba(0,0,0,.5);
+    border-radius: 20px;
+	background-color: #FFFFFF;
+}
+#fileholder p{
+	position: absolute;
+	font-family: Arial;
+    text-align: center;
+    line-height: 65px;
+    font-size: 20px;
+    color: rgba(0,0,0,.5);
+    margin-left: 4%;
+}
+
+input[type="file"]{
+	position: relative;
+	height:100%;
+	width: 100%;
+	opacity: 0;
+}
 /*
 #tfheader{
 		background-color:#c3dfef;
