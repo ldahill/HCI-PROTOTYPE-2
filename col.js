@@ -12,9 +12,10 @@ var songfiles= [];
 var isSubset = false;
 var subset = [];
 
+var history = [];  //SHOULD BE AN ARRAY OF TUPLES (displaying string, and # selected)
+
 
 function playSound(queueindex){
-    console.log(queueindex);
     if (now_playing_index != queueindex){
         if(isstreaming == true || ispaused == true){
             mySound.pause();
@@ -87,8 +88,6 @@ function organizeFiles(files){
             addtoContainers(i, file.webkitRelativePath);
         }
     }
-    console.log(artists);
-    console.log(albums);
 }
 
 function cleansongname(name){
@@ -110,9 +109,7 @@ function addtoContainers(fileindex, filepath){
     album = pathlist[pathlist.length-2];
     artist = pathlist[pathlist.length-3];
     found = false;
-    console.log(name);
     songname = cleansongname(name);
-    console.log(songname);
     song = {title: songname,album: album, artist: artist,fileindex:fileindex,
            isqd: false}; 
     songs.push(song);
@@ -170,25 +167,24 @@ $(document).ready(function() {
 
 //Handles resizing of the webpage
 $(window).resize(function(){
-    var col1 = $('#list1div');
-    var col2 = $('#list2div');
+    var col1 = $('#Col1');
+    var col2 = $('#Col2');
     var colsep = $('#colsep');
     if (col1.height() < col2.height()){
-        colsep.height(col2.height());
+        col1.height(col2.height());
     }
     else {
-        colsep.height(col1.height());
+        col2.height(col1.height());
     }
-    colsep.offset(col2.offset());
+   // colsep.offset(col2.offset());
 }).resize();
 
 //Relies on the order of list 1 corresponding to the order of
 //mainlist
 $(document).on('click', '#list1 li', function(){
     var list2 = $('#list2');
-    var elemindex = $(this).index();    
-    console.log("Browse Element Clicked");
-    console.log(displaying);
+    var elemindex = $(this).index();
+    console.log("Browse element clicked");
     if (displaying == "songs"){
         if(isSubset == false){
             songobj = songs[elemindex];
@@ -214,10 +210,13 @@ $(document).on('click', '#list1 li', function(){
             console.log("ERROR: SITE DOES NOT SUPPORT GENRE BROWSING YET");
         }
         else if (displaying == "artists"){
+            console.log("in artists");
             artistobj = artists[elemindex];
             console.log("Selected artist: "+artistobj.title)
             albumarr = artistobj.albumindices;
             list1.empty();
+            history.push({displaying: "artists", 
+                          listelem: $(this), subset: subset});
             isSubset = true;
             subset = [];
             for(i = 0, len = albumarr.length; i < len; i++){
@@ -232,11 +231,12 @@ $(document).on('click', '#list1 li', function(){
             list1.empty();
             console.log("isSubset ==" + isSubset);
             if(isSubset == false){
+                history.push({displaying: "albums", listelem: $(this), subset: []});
                 albumobj = albums[elemindex];
             }
             else{
+                history.push({displaying: "albums", listelem: $(this), subset: subset});
                 albumobj = subset[elemindex];
-                console.log(albumobj);
             }
             console.log("Selected Album: " + albumobj.title);
             songarr = albumobj.songindices;
@@ -271,6 +271,7 @@ $("#playlists").on("click", function(){
     isSubset = false;*/
 });
 $("#artists").on("click", function(){
+    history.push({displaying: "artists", listelem: $(this), subset: []});
     console.log("artists clicked");
     $('#list1').empty();
     for(var i = 0, len = artists.length; i < len; i++){
@@ -279,7 +280,7 @@ $("#artists").on("click", function(){
     };
     displaying = "artists";
     isSubset = false;
-    setdisplaybuttoncolor('#EEEEEE');
+    setdisplaybuttoncolor('#7e9fb9');
 });
 $("#genres").on("click", function(){
     console.log("genres clicked");
@@ -289,6 +290,7 @@ $("#genres").on("click", function(){
     isSubset = false;*/
 });
 $("#albums").on("click", function(){
+    history.push({displaying: "artists", listelem: $(this), subset: []});
     console.log("albums clicked");
     $('#list1').empty();
     for(var i = 0, len = albums.length; i < len; i++){
@@ -298,9 +300,10 @@ $("#albums").on("click", function(){
     setdisplaybuttoncolor();
     displaying = "albums";
     isSubset = false;
-    setdisplaybuttoncolor('#EEEEEE');
+    setdisplaybuttoncolor('#7e9fb9');
 });
 $("#songs").on("click", function(){
+    history.push({displaying: "artists", listelem: $(this), subset: []});
     console.log("songs clicked");
     $('#list1').empty();
     for(var i = 0, len = songs.length; i < len; i++){
@@ -311,10 +314,27 @@ $("#songs").on("click", function(){
     setdisplaybuttoncolor('#FFFFFF');
     displaying = "songs";
     isSubset = false;
-    setdisplaybuttoncolor('#EEEEEE');
+    setdisplaybuttoncolor('#7e9fb9');
 });
 //***********************************************************************//
 //***********************************************************************//
+$("#brwseback").on("click",function(){
+    if(history.length >= 2){
+        console.log(history.pop());
+        hist = history.pop();
+        console.log(hist);
+        displaying = hist.displaying;
+        subset = hist.subset;
+        isSubset = true;
+        if(subset == []){
+            isSubset = false;
+        }
+        console.log("FUCK YEA");
+        hist.listelem.trigger("click");
+    }   
+  //  {displaying: "artist", listelem: $(this), subset: []}
+});
+
 function setdisplaybuttoncolor(color){
     $("#artists").css('background-color','#FFFFFF');
     $("#albums").css('background-color','#FFFFFF');
@@ -327,7 +347,6 @@ function setdisplaybuttoncolor(color){
 $("#backbutton").on("click", function(){
     targetindex = now_playing_index - 1;
     if (targetindex < 0){targetindex = 0;}
-    console.log("backbutton clicked",targetindex, now_playing_index);
     playSound(targetindex);
 });
 //click causes playing song to be paused
@@ -354,6 +373,5 @@ $("#playbutton").on("click", function(){
 
 $("#fwdbutton").on("click", function(){
     targetindex = now_playing_index + 1;
-    console.log("Fwdbutton clicked",targetindex, now_playing_index);
     if (targetindex < queue.length){playSound(targetindex);}
 });

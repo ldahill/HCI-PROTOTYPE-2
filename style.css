@@ -222,6 +222,15 @@ h2{
 	border-bottom: 1px solid #C0C0C0;
 	border-left: 1px solid #C0C0C0;
 }
+#browsebar li{
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+#playbar li{
+	height: 50px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
 .sidebar p{
 	text-align: center;
 }
@@ -239,7 +248,10 @@ h2{
 }
 
 
-
+/*
+|  INTRODUCTORY PAGE STYLE
+|
+*/
 #cover{
 	position: absolute; 
 	top: 0; 
