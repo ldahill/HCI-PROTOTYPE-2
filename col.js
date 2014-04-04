@@ -139,7 +139,7 @@ function addtoContainers(fileindex, filepath){
         if(found == false){
             art = {title: artist, albumindices: []}; 
             art.albumindices.push(albums.length - 1);
-            artists.push(art);
+            artists.unshift(art);
         }
     }
 }
