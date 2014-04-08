@@ -5,22 +5,7 @@ html {
 	height: 100%;
 	background-color: rgba(110, 121, 129, 0.45);
 	background: url('grey_wash_wall.png');
-	min-width: 820px;
-/*	background: 
-      linear-gradient(
-      	180deg,
-      	rgba(110, 121, 129, 0.45),
-      	rgba(29, 3, 48, 0.35)
-      ),
- 	  url('grey_wash_wall.png');
-/*
-	background: 
-      linear-gradient(
-      	180deg,
-      	rgba(29, 3, 48, 0.45),
-      	rgba(29, 3, 48, 0.35)
-      ),
- 	  url('grey_wash_wall.png');*/
+	min-width: 930px;
 }
 body{
 	margin:0;
@@ -109,6 +94,42 @@ h2,p{
 /*--------------------------*/
 /*--------------------------*/
 /*--------------------------*/
+#addall {
+	position: absolute;
+	display: inline-block;
+	border-top: 20px solid #4A5F70;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	height: 0;
+	width: 77px;
+	left: 35%;
+	cursor: pointer;
+}
+#addall p{
+	position: absolute;
+	top: -21px;
+	left: 13px;
+	text-align: center;
+	margin: 0px;
+}/*
+#clearall {
+	position: absolute;
+	display: inline-block;
+	border-top: 20px solid #4A5F70;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	height: 0;
+	width: 77px;
+	left: 75%;
+	cursor: pointer;
+}
+#clearall p{
+	position: absolute;
+	top: -21px;
+	left: 22px;
+	text-align: center;
+	margin: 0px;
+}*/
 
 #Col1, #Col2{
 	background-color: #FFFFFF;
@@ -120,7 +141,7 @@ h2,p{
 #list1 li, #list2 li{
 	border-top: 1px solid #C0C0C0;
 	border-bottom: 1px solid #C0C0C0;
-
+	margin-bottom: 1px;
 }
 #list1 li:first-child, #list2 li:first-child{
 	border-top: 1px solid #FFF;
@@ -133,6 +154,15 @@ h2,p{
 	padding-left: 5px;
 	padding-right: 5px;
 	margin: 0px;
+}
+#list2 p{
+	display: inline-block;
+	width: 80%;
+}
+.sortable-placeholder{
+	border: 1px dashed #CCC;
+	background: none;
+	height: 56px;
 }
 
 .playing{
@@ -156,7 +186,17 @@ h2,p{
 }
 
 #list2 li:hover{
-	background: #C1F0F6;
+/*	background: #C1F0F6;
+	background: url("x-mark.jpg") no-repeat;
+	background-size: 15px 14px;
+	background-position-y: 27%;
+	background-position-x: 92%;*/
+}
+#xmark{
+	height: 15px;
+	width: 14px;
+	top: 37%;
+	left: 81%;
 }
 li:hover{
 	cursor: pointer;
@@ -235,19 +275,40 @@ h2{
 	text-align: center;
 }
 #playbar ul{
-	width: 100px;
+	width: 60px;
 	padding-left: 0px;
 }
-.sidebar li:first-child{
+#makeplaylist p{
+	margin-top: 4px;
 }
+
 #brwseback{
 	position: relative;
 	height: 28px;
 	width: 41px;
 	float: left;
 }
+/*
+	BUBBLE
+*/
 
-
+.bubble 
+{
+	position: absolute;
+	width: 250px;
+	height: 120px;
+	padding: 0px;
+	background: #FFFFFF;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: #7F7F7F solid 5px;
+	left: 66%;
+	top: 39%;
+}
+#pnameform{
+	text-align: center;
+}
 /*
 |  INTRODUCTORY PAGE STYLE
 |

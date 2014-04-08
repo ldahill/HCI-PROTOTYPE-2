@@ -7,18 +7,19 @@ var queue = [];
 var albums = [];
 var artists = [];
 var songs = [];
+var playlists = [];
 var songfiles= [];
 
 var isSubset = false;
 var subset = [];
 
-var history = [];  //SHOULD BE AN ARRAY OF TUPLES (displaying string, and # selected)
-
+var history = [];  //Array of tuples: {displaying string, object}
+var dragstartindex = null;
 
 function playSound(queueindex){
     if (now_playing_index != queueindex){
         if(isstreaming == true || ispaused == true){
-            mySound.pause();
+            mySound.stop();
             isstreaming = false;
             ispaused = false;
             $('#list2 li').eq(now_playing_index).removeClass("playing");
@@ -65,11 +66,6 @@ function playSound(queueindex){
     }
 }
 
-//--------------------------------------------------------------------||
-//Below are the event listeners that control folder uploading
-/*$("#fileURL").change(function(){
-
-});*/
 
 $('input[type=file]').change(function(e){
     $('#cover').remove();
@@ -88,6 +84,16 @@ function organizeFiles(files){
             addtoContainers(i, file.webkitRelativePath);
         }
     }
+    albums.sort(sortbytitle);
+    songs.sort(sortbytitle);
+}
+function sortbytitle(a, b){
+    var nameA=a.title.toLowerCase(), nameB=b.title.toLowerCase()
+    if (nameA < nameB) 
+        return -1 
+    if (nameA > nameB)
+        return 1
+    return 0 //default return value (no sorting)
 }
 
 function cleansongname(name){
@@ -103,6 +109,11 @@ function cleansongname(name){
     }
     return namearray.join(" ");
 }
+
+//  Takes filepaths and fileindex to create artist, album, and song arrays
+//  Artist objects hold an array of indices for the album array
+//  Album objects hold an array of indices for the song array
+//  Song objects hold an index for the songfile array
 function addtoContainers(fileindex, filepath){
     pathlist = filepath.split("/");
     name = pathlist[pathlist.length-1];
@@ -110,32 +121,31 @@ function addtoContainers(fileindex, filepath){
     artist = pathlist[pathlist.length-3];
     found = false;
     songname = cleansongname(name);
-    song = {title: songname,album: album, artist: artist,fileindex:fileindex,
-           isqd: false}; 
+    var song = {title: songname, album: album, artist: artist, fileindex:fileindex,
+            isqd: false}; 
     songs.push(song);
-    songindex = songs.length - 1;
-
+///-----------------STOP HERE------------//
     for(var i = 0, len = albums.length; i < len; i++){
         alb = albums[i];
         if(album == alb.title){
-            alb.songindices.push(songindex);
+            alb.songobjs.push(song);
             found = true;
         }
     }
     if(found == false){
-        alb = {title: album, songindices: [], artist: artist}; 
-        alb.songindices.push(songindex);
+        alb = {title: album, songobjs: [], artist: artist}; 
+        alb.songobjs.push(song);
         albums.push(alb);
         for(var i = 0, len = artists.length; i < len; i++){
             art = artists[i];
             if(artist == art.title){
-                art.albumindices.push(albums.length - 1);
+                art.albumobjs.push(alb);
                 found = true;
             }
         }
         if(found == false){
-            art = {title: artist, albumindices: []}; 
-            art.albumindices.push(albums.length - 1);
+            art = {title: artist, albumobjs: []}; 
+            art.albumobjs.push(alb);
             artists.unshift(art);
         }
     }
@@ -143,12 +153,51 @@ function addtoContainers(fileindex, filepath){
 
 
 //--------------------------------------------------------------------||
-
-
+function enablesorting(){
+    $('.sortable').sortable({
+        items: ':not(.disabled)'
+    });
+}
+$('.sortable').sortable().bind('dragstart', function(e) {
+    //console.log(queue);
+    console.log($(e.target).index());
+    dragstartindex = $(e.target).index();
+});
+$('.sortable').sortable().bind('sortupdate', function(e, ui) {
+    //ui.item contains the current dragged element.
+    newindex = ui.item.index();
+    arraymove(queue, dragstartindex, newindex);
+    if(dragstartindex == now_playing_index){
+        now_playing_index = newindex;
+    }
+    else if(dragstartindex > now_playing_index && newindex <= now_playing_index){
+        now_playing_index += 1;
+    }
+    else if(dragstartindex < now_playing_index && newindex >= now_playing_index){
+        now_playing_index -= 1;
+    }
+    //Triggered when the user stopped sorting and the DOM position has changed.
+});
+function arraymove(arr, fromIndex, toIndex){
+    printit(arr);
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+    printit(arr);
+}
+function printit(arr){
+    for( var i = 0; i < arr.length; i++){
+        console.log(arr[i].title);
+    }
+    console.log("---------------");
+}
 //Upon loading the document a mainlist and queue array are initialized.
 //The mainlist is filled with artists to display by triggering an artists click
 //soundManager is also initialized.
 $(document).ready(function() {
+    $(".bubble").hide();
+    $("#addall").hide();
+    //$("#addall").hide();
     mainlist = new Array();
     queue = new Array();
    // $("#artists").trigger('click');
@@ -197,6 +246,7 @@ $(document).on('click', '#list1 li', function(){
             queue.push(songobj);
             songobj.isqd = true;
             list2.append($(this).clone());
+            enablesorting();
             $(window).trigger('resize');
         } 
     }
@@ -204,7 +254,15 @@ $(document).on('click', '#list1 li', function(){
         name = $(this).html();
         var list1 = $('#list1');
         if (displaying == "playlists"){
-            console.log("ERROR: SITE DOES NOT SUPPORT PLAYLIST BROWSING YET");
+            list1.empty();
+            console.log("isSubset ==" + isSubset);
+            if(isSubset == false){
+                playlistobj = playlists[elemindex];
+            }
+            else{
+                playlistobj = playlists[elemindex];
+            }
+            selectedplaylist(playlistobj);
         }
         else if (displaying == "genres"){
             console.log("ERROR: SITE DOES NOT SUPPORT GENRE BROWSING YET");
@@ -213,50 +271,98 @@ $(document).on('click', '#list1 li', function(){
             console.log("in artists");
             artistobj = artists[elemindex];
             console.log("Selected artist: "+artistobj.title)
-            albumarr = artistobj.albumindices;
-            list1.empty();
-            history.push({displaying: "artists", 
-                          listelem: $(this), subset: subset});
-            isSubset = true;
-            subset = [];
-            for(i = 0, len = albumarr.length; i < len; i++){
-                albumobj = albums[albumarr[i]];
-                albumname = albumobj.title;
-                list1.append("<li><p> "+albumname+" </p></li>");
-                subset.push(albumobj);
-            }
-            displaying = "albums";
+            selectedartist(artistobj);
         }
         else if (displaying == "albums"){
             list1.empty();
             console.log("isSubset ==" + isSubset);
             if(isSubset == false){
-                history.push({displaying: "albums", listelem: $(this), subset: []});
                 albumobj = albums[elemindex];
             }
             else{
-                history.push({displaying: "albums", listelem: $(this), subset: subset});
                 albumobj = subset[elemindex];
             }
-            console.log("Selected Album: " + albumobj.title);
-            songarr = albumobj.songindices;
-            console.log(songarr)
-            subset = [];
-            for(i = 0, len = songarr.length; i < len; i++){
-                song = songs[songarr[i]];
-                list1.append("<li><p>"+song.title+"<small> "+song.artist+"</small></p>");
-                subset.push(song);
-            }
-            isSubset = true;
-            displaying = "songs";
+            selectedalbum(albumobj);
         }
     }
 });
 
+function selectedartist(artistobj){
+    history.push({displaying: "artists", obj: artistobj});
+    list1 = $("#list1");
+    list1.empty();    
+    albumarr = artistobj.albumobjs;
+    isSubset = true;
+    subset = [];
+    for(i = 0, len = albumarr.length; i < len; i++){
+        albumobj = albumarr[i];
+        albumname = albumobj.title;
+        list1.append("<li><p> "+albumname+" </p></li>");
+        subset.push(albumobj);
+    }
+    displaying = "albums";
+    //HIDEADDALL
+    // history.push({displaying: "artists", obj: artistobj});
+}
+function selectedalbum(albumobj){
+    history.push({displaying: "albums", obj: albumobj});
+    list1 = $("#list1");
+    list1.empty();
+    console.log("Selected Album: " + albumobj.title);
+    songarr = albumobj.songobjs;
+    console.log(songarr)
+    subset = [];
+    for(i = 0, len = songarr.length; i < len; i++){
+        song = songarr[i];
+        list1.append("<li><p>"+song.title+"<small> "+song.artist+"</small></p>");
+        subset.push(song);
+    }
+    isSubset = true;
+    displaying = "songs";
+    $("#addall").show(450);
+    //SHOWHIDEALL
+    // history.push({displaying: "albums", obj: albumobj});
+}
+function selectedplaylist(playlistobj){
+    history.push({displaying: "playlists", obj: playlistobj});
+    list1 = $("#list1");
+    list1.empty();
+    console.log("Selected Playlist: " + playlistobj.title);
+    songarr = playlistobj.songobjs;
+    console.log(songarr)
+    subset = [];
+    for(i = 0, len = songarr.length; i < len; i++){
+        song = songarr[i];
+        list1.append("<li><p>"+song.title+"<small> "+song.artist+"</small></p>");
+        subset.push(song);
+    }
+    isSubset = true;
+    displaying = "songs";
+    $("#addall").show(450);
+    //SHOWHIDEALL
+}
+
 //Clicking on an element in the play queue will delete it 
 $(document).on('click', '#list2 li', function(){
-    //$(this).remove();
     playSound($(this).index());
+});
+
+$(document).on('mouseenter', '#list2 li', function(e){
+    $(this).append("<img src=\"x-mark.jpg\" id=\"xmark\">");
+    $("#xmark").click(function(){
+        var qelem = $(this).parent();
+        var j = qelem.index();
+        queue[j].isqd = false;
+        queue.splice(j, 1);
+        qelem.remove();
+        if(j == now_playing_index){
+            mySound.stop();
+        }
+    });
+});
+
+$(document).on('mouseleave', '#list2 li', function(e){
+    $(this).find("#xmark").remove();
 });
 
 //***********************************************************************\\
@@ -264,14 +370,20 @@ $(document).on('click', '#list2 li', function(){
 //Below are the event listeners for the Browse Menu's side panel
 //Each one will clear and update the Browse Menu's display
 $("#playlists").on("click", function(){
+    history.push({displaying: "playlists", obj: null});
     console.log("playlists clicked");
- /* $('#list1').empty();
-    $('#list1').append();
+    $('#list1').empty();
+    for(var i = 0, len = playlists.length; i < len; i++){
+        listname = playlists[i].title;
+        $('#list1').append("<li><p>" +listname+ " </p></li>");
+    };
     displaying = "playlists";
-    isSubset = false;*/
+    isSubset = false;
+    setdisplaybuttoncolor('#7e9fb9');
+    $("#addall").hide(450);
 });
 $("#artists").on("click", function(){
-    history.push({displaying: "artists", listelem: $(this), subset: []});
+    history.push({displaying: "artists", obj: null});
     console.log("artists clicked");
     $('#list1').empty();
     for(var i = 0, len = artists.length; i < len; i++){
@@ -281,29 +393,31 @@ $("#artists").on("click", function(){
     displaying = "artists";
     isSubset = false;
     setdisplaybuttoncolor('#7e9fb9');
+    $("#addall").hide(450);
 });
 $("#genres").on("click", function(){
     console.log("genres clicked");
+
  /* $('#list1').empty();
     $('#list1').append();
     displaying = "genres";
     isSubset = false;*/
 });
 $("#albums").on("click", function(){
-    history.push({displaying: "artists", listelem: $(this), subset: []});
+    history.push({displaying: "albums", obj: null});
     console.log("albums clicked");
     $('#list1').empty();
     for(var i = 0, len = albums.length; i < len; i++){
         albumname = albums[i].title;
         $('#list1').append("<li><p> "+albumname+" </p></li>");
     }
-    setdisplaybuttoncolor();
     displaying = "albums";
     isSubset = false;
     setdisplaybuttoncolor('#7e9fb9');
+    $("#addall").hide(450);
 });
 $("#songs").on("click", function(){
-    history.push({displaying: "artists", listelem: $(this), subset: []});
+    history.push({displaying: "songs", obj: null});
     console.log("songs clicked");
     $('#list1').empty();
     for(var i = 0, len = songs.length; i < len; i++){
@@ -311,43 +425,142 @@ $("#songs").on("click", function(){
         artist = songs[i].artist;
         $('#list1').append("<li><p>"+songname+"<small> "+artist+" </small></p>");
     }
-    setdisplaybuttoncolor('#FFFFFF');
     displaying = "songs";
     isSubset = false;
     setdisplaybuttoncolor('#7e9fb9');
+    $("#addall").show(450);
 });
 //***********************************************************************//
 //***********************************************************************//
-$("#brwseback").on("click",function(){
-    if(history.length >= 2){
-        console.log(history.pop());
-        hist = history.pop();
-        console.log(hist);
-        displaying = hist.displaying;
-        subset = hist.subset;
-        isSubset = true;
-        if(subset == []){
-            isSubset = false;
+
+$("#clearall").on("click", function(){
+    $("#list2").empty();
+    for(var i = 0; i < queue.length; i++){
+        queue[i].isqd = false;
+    }
+    queue = [];
+    if(now_playing_index != -1){
+        mySound.stop();
+    }
+})
+
+$("#addall").on("click", function(){
+   // var list1 = $("#list1 li").toArray();
+    var list1 = $("#list1 li");
+    var list2 = $("#list2");
+    if(displaying == "songs"){
+        if(isSubset == false){
+            arr = songs;
         }
-        console.log("FUCK YEA");
-        hist.listelem.trigger("click");
-    }   
-  //  {displaying: "artist", listelem: $(this), subset: []}
+        else{
+            arr = subset;
+        }
+        for(i = 0, len = arr.length; i < len; i++){
+            songobj = arr[i]
+            listelem  = list1.get(i);
+            if(songobj.isqd == false){
+                queue.push(songobj);
+                songobj.isqd = true;
+                list2.append($(listelem).clone());
+            } 
+        }
+        enablesorting();
+        $(window).trigger('resize');
+    }
 });
+
+
+$("#makeplaylist").on("click", function(e){
+    posx = $(this).position().left + $(this).width()/2;
+    posy = $(this).position().top + $(this).height();
+    newx = posx - 202.5;
+    newy = posy + 19;
+    console.log("Y: " + posy +" X: " + posx);
+    if(queue.length > 0){
+        $(".bubble").css({
+            "position":"absolute", 
+            "top": newy + "px",
+            "left": newx + "px",
+        });
+        console.log("New Y: " + newy +" New X: " + newx);
+        $(".bubble").show();
+    }
+    //var listnum = playlists.length + 1;
+});
+$("#listnamebutton").bind("keypress", {}, function(e){
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) { //Enter keycode                        
+        e.preventDefault();
+        getplaylist();
+    }
+    $(".bubble").hide();
+});
+$("#listnamebutton").on("click", function(){
+    //var listnum = playlists.length + 1;
+    getplaylist();
+    $(".bubble").hide();
+});
+$("#cancelname").on("click", function(){
+    $(".bubble").hide();
+})
+function getplaylist(){
+    var listname = $("#listname").val();
+    if (listname != "")
+    {
+        playlistobj = {title: listname, songobjs: []};
+        for(var i = 0; i < queue.length; i++){
+            songobj = queue[i];
+            playlistobj.songobjs.push(songobj);
+        }
+        playlists.push(playlistobj);
+    }
+}
+
 
 function setdisplaybuttoncolor(color){
     $("#artists").css('background-color','#FFFFFF');
     $("#albums").css('background-color','#FFFFFF');
+    $("#playlists").css('background-color','#FFFFFF');
     $("#songs").css('background-color','#FFFFFF');
     buttonid = '#' + displaying;
     $(buttonid).css('background-color',color);
 }
 
+$("#brwseback").on("click",function(){
+    if(history.length >= 2){
+        history.pop();
+        hist = history.pop();
+        displaying = hist.displaying;
+        obj = hist.obj;
+        if(obj == null){
+            container = "#" + displaying;
+            $(container).trigger("click");
+        }
+        else{
+            if(displaying = "artists"){
+                selectedartist(obj);
+            }
+            else if(displaying = "albums"){
+                selectedalbum(obj);
+            }
+        }
+    }
+});
+
 //click causes playing to skip to prev track
 $("#backbutton").on("click", function(){
-    targetindex = now_playing_index - 1;
-    if (targetindex < 0){targetindex = 0;}
-    playSound(targetindex);
+    if(now_playing_index != -1){
+        currpos = mySound.position/1000
+        if(currpos <= 3){
+            targetindex = now_playing_index - 1;
+            if (targetindex < 0){targetindex = 0;}
+            playSound(targetindex);
+        }
+        else{
+            mySound.stop();
+            mySound.start();
+        }
+    }
 });
 //click causes playing song to be paused
 $("#playbutton").on("click", function(){

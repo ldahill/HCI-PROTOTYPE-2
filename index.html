@@ -23,11 +23,10 @@
 
       <div id="Col1">
         <div class="colheader" id = "browseheader">
-          <!--<button id="brwseback" onclick="goBack()">Go Back</button>-->
           <img src="gobackbutton.png" id="brwseback">
           <h2 id="maintitle">Browse</h2>
-
         </div>
+        <div id="addall"><p>Add All</p></div>
         <div id="list1div">
           <ul id="list1"></ul>
         </div>
@@ -38,15 +37,13 @@
           <h2 id = "qtitle">Play Queue</h2>
           <ul id = "Qcontrols">
             <li class="musbutton" id="backbutton"><img src="backbutton.png" id="controlimg"></li>
-            <!--<li class="musbutton" id="backbutton"><p>Skip Back</p></li>-->
             <li class="musbutton" id="playbutton"><img src="playbutton.png" id="playimg"></li>
-            <!--<li class="musbutton" id="playbutton"><img src="pausebutton.png" id="pauseimg"></li>-->
             <li class="musbutton" id="fwdbutton"><img src="fwdbutton.png" id="controlimg"></li>
-            <!--<li class="musbutton" id="fwdbutton"><p>Skip Forward</p></li>-->
           </ul>
         </div>
+      <!--  <div id="clearall"><p>Clear</p></div>-->
         <div id="list2div">
-          <ul id="list2">
+          <ul class = "sortable list" id="list2">
           </ul>
         </div>
       </div>
@@ -54,11 +51,24 @@
       <div class = "sidebar" id = "playbar">
         <ul>
           <li><p>Path</p></li>
-          <li><p>Make Playlist</p></li>
+          <li id="makeplaylist"><p>Make </br> Playlist</p></li>
+           <li id="clearall"><p>Clear</p></li>
         </ul>
       </div>
+    </div>
+
+    <div class = "bubble">
+      <div class = "pointer" style="content: '';position: absolute;border-style: solid;border-width: 0 15px 20px;border-color: #FFFFFF transparent;display: block;width: 0;z-index: 1;margin-left: -15px;top: -20px;left: 81%;"></div>
+      <div class="pointerBorder" style="content: '';position: absolute;border-style: solid;border-width: 0 19px 24px;border-color: #7F7F7F transparent;display: block;width: 0;z-index: -1;margin-left: -19px;top: -29px;left: 81%;"></div>
+      <form id = "pnameform">
+        <p>Please Enter a Playlist Name</p>
+        <input type="text" id="listname">
+        <input type="button" value="OK" id= "listnamebutton">
+        <input type="button" value="Cancel" id= "cancelname">
+      </form>
 
     </div>
+
     <div id = "cover"></div>
     <div id="intro">
       <h1 id="welcome">Hello and Welcome to Spottie Ottie. To start drag and drop your iTunes Music folder into the box below. Alternatively, click the box to open up a file browsing window. </h1>
@@ -71,7 +81,10 @@
       <input type="file" multiple webkitdirectory id="fileURL"/>
       <ul id="fileOutput"></ul>
     </div>  -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="jquery.sortable.js"></script>
+    <script> $(".sortable").sortable('enable');</script>
     <script type="text/javascript" src="soundmanager2.js"></script>
     <script src="col.js"></script>
   </body>
