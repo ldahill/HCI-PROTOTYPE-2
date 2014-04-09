@@ -121,10 +121,10 @@ function addtoContainers(fileindex, filepath){
     artist = pathlist[pathlist.length-3];
     found = false;
     songname = cleansongname(name);
-    var song = {title: songname, album: album, artist: artist, fileindex:fileindex,
-            isqd: false}; 
+    var song = {title: songname, album: album, artist: artist, 
+                fileindex:fileindex, isqd: false, source: null}; 
     songs.push(song);
-///-----------------STOP HERE------------//
+    ///-----------------STOP HERE------------//
     for(var i = 0, len = albums.length; i < len; i++){
         alb = albums[i];
         if(album == alb.title){
@@ -200,8 +200,6 @@ $(document).ready(function() {
     //$("#addall").hide();
     mainlist = new Array();
     queue = new Array();
-   // $("#artists").trigger('click');
-    $("#playlists").trigger('click');
     soundManager.setup({
         url: '/path/to/swf-directory/',
         onready: function() {
@@ -245,6 +243,7 @@ $(document).on('click', '#list1 li', function(){
         if(songobj.isqd == false){
             queue.push(songobj);
             songobj.isqd = true;
+            songobj.source = history[history.length - 1].obj;
             list2.append($(this).clone());
             enablesorting();
             $(window).trigger('resize');
@@ -432,18 +431,6 @@ $("#songs").on("click", function(){
 });
 //***********************************************************************//
 //***********************************************************************//
-
-$("#clearall").on("click", function(){
-    $("#list2").empty();
-    for(var i = 0; i < queue.length; i++){
-        queue[i].isqd = false;
-    }
-    queue = [];
-    if(now_playing_index != -1){
-        mySound.stop();
-    }
-})
-
 $("#addall").on("click", function(){
    // var list1 = $("#list1 li").toArray();
     var list1 = $("#list1 li");
@@ -461,6 +448,7 @@ $("#addall").on("click", function(){
             if(songobj.isqd == false){
                 queue.push(songobj);
                 songobj.isqd = true;
+                songobj.source = history[history.length - 1].obj;
                 list2.append($(listelem).clone());
             } 
         }
@@ -469,6 +457,20 @@ $("#addall").on("click", function(){
     }
 });
 
+
+$("#sourcebuttn").on("click", function(){
+    sourceobj = queue[now_playing_index].source;
+    if(sourceobj == null){
+        $("#songs").trigger("click");
+    }
+    else if(sourceobj.hasOwnProperty("artist")){
+        selectedalbum(sourceobj);
+    }
+    else{
+        selectedplaylist(sourceobj);
+    }
+    console.log(sourceobj);
+});
 
 $("#makeplaylist").on("click", function(e){
     posx = $(this).position().left + $(this).width()/2;
@@ -489,7 +491,10 @@ $("#makeplaylist").on("click", function(e){
 });
 $("#listnamebutton").bind("keypress", {}, function(e){
     var code = (e.keyCode ? e.keyCode : e.which);
-    if (code == 13) { //Enter keycode                        
+    console.log(code);
+    e.preventDefault();
+    if (code == 13) { //Enter keycode 
+        console.log("AFKJHAKJSDBVKJASGHJLAS");                       
         e.preventDefault();
         getplaylist();
     }
@@ -516,6 +521,16 @@ function getplaylist(){
     }
 }
 
+$("#clearall").on("click", function(){
+    $("#list2").empty();
+    for(var i = 0; i < queue.length; i++){
+        queue[i].isqd = false;
+    }
+    queue = [];
+    if(now_playing_index != -1){
+        mySound.stop();
+    }
+})
 
 function setdisplaybuttoncolor(color){
     $("#artists").css('background-color','#FFFFFF');
@@ -530,6 +545,8 @@ $("#brwseback").on("click",function(){
     if(history.length >= 2){
         history.pop();
         hist = history.pop();
+        console.log("Return to: ");
+        console.log(hist);
         displaying = hist.displaying;
         obj = hist.obj;
         if(obj == null){
@@ -543,10 +560,12 @@ $("#brwseback").on("click",function(){
             else if(displaying = "albums"){
                 selectedalbum(obj);
             }
+            else if(displaying = "playlists"){
+                selectedplaylist(obj);
+            }
         }
     }
 });
-
 //click causes playing to skip to prev track
 $("#backbutton").on("click", function(){
     if(now_playing_index != -1){
@@ -564,9 +583,7 @@ $("#backbutton").on("click", function(){
 });
 //click causes playing song to be paused
 $("#playbutton").on("click", function(){
-    console.log("Play clicked");
     htmltext = $(this).html();
-    console.log(htmltext);
     if(queue.length > 0){
         if(htmltext == "<img src=\"pausebutton.png\" id=\"pauseimg\">"){
             playSound(now_playing_index);
