@@ -306,6 +306,33 @@ h2{
 	left: 66%;
 	top: 39%;
 }
+.pointer{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 0 15px 20px;
+	border-color: #FFFFFF transparent;
+	display: block;
+	width: 0;
+	z-index: 1;
+	margin-left: -15px;
+	top: -20px;
+	left: 81%; 
+	z-index: 2;
+}
+.pointerBorder{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 0 19px 24px;
+	border-color: #7F7F7F transparent;
+	display: block;width: 0;
+	z-index: -1;
+	margin-left: -19px;
+	top: -29px;
+	left: 81%; 
+	z-index: 1;
+}
 #pnameform{
 	text-align: center;
 }
