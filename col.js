@@ -369,17 +369,19 @@ $(document).on('mouseleave', '#list2 li', function(e){
 //Below are the event listeners for the Browse Menu's side panel
 //Each one will clear and update the Browse Menu's display
 $("#playlists").on("click", function(){
-    history.push({displaying: "playlists", obj: null});
-    console.log("playlists clicked");
-    $('#list1').empty();
-    for(var i = 0, len = playlists.length; i < len; i++){
-        listname = playlists[i].title;
-        $('#list1').append("<li><p>" +listname+ " </p></li>");
-    };
-    displaying = "playlists";
-    isSubset = false;
-    setdisplaybuttoncolor('#7e9fb9');
-    $("#addall").hide(450);
+    if(playlists.length >= 1){
+        history.push({displaying: "playlists", obj: null});
+        console.log("playlists clicked");
+        $('#list1').empty();
+        for(var i = 0, len = playlists.length; i < len; i++){
+            listname = playlists[i].title;
+            $('#list1').append("<li><p>" +listname+ " </p></li>");
+        };
+        displaying = "playlists";
+        isSubset = false;
+        setdisplaybuttoncolor('#7e9fb9');
+        $("#addall").hide(450);
+    }
 });
 $("#artists").on("click", function(){
     history.push({displaying: "artists", obj: null});
@@ -489,16 +491,13 @@ $("#makeplaylist").on("click", function(e){
     }
     //var listnum = playlists.length + 1;
 });
-$("#listnamebutton").bind("keypress", {}, function(e){
+$("#pnameform").bind("keypress", {}, function(e){
     var code = (e.keyCode ? e.keyCode : e.which);
-    console.log(code);
-    e.preventDefault();
-    if (code == 13) { //Enter keycode 
-        console.log("AFKJHAKJSDBVKJASGHJLAS");                       
+    if (code == 13) { //Enter keycode                       
         e.preventDefault();
         getplaylist();
+        $(".bubble").hide();
     }
-    $(".bubble").hide();
 });
 $("#listnamebutton").on("click", function(){
     //var listnum = playlists.length + 1;
