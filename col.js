@@ -300,6 +300,7 @@ function selectedartist(artistobj){
         subset.push(albumobj);
     }
     displaying = "albums";
+    $("#addall").hide(450);
     //HIDEADDALL
     // history.push({displaying: "artists", obj: artistobj});
 }
