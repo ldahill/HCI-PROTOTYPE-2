@@ -87,6 +87,7 @@ function organizeFiles(files){
     albums.sort(sortbytitle);
     songs.sort(sortbytitle);
 }
+
 function sortbytitle(a, b){
     var nameA=a.title.toLowerCase(), nameB=b.title.toLowerCase()
     if (nameA < nameB) 
@@ -210,7 +211,6 @@ $(document).ready(function() {
         }
     });
 });
-
 
 //Handles resizing of the webpage
 $(window).resize(function(){
@@ -605,3 +605,10 @@ $("#fwdbutton").on("click", function(){
     targetindex = now_playing_index + 1;
     if (targetindex < queue.length){playSound(targetindex);}
 });
+
+
+
+
+
+
+
