@@ -17,7 +17,7 @@ h2,p{
 /*--------------------------*/
 /*---Genre Selector Style---*/
 /*--------------------------*/
-#dropdown, #Qcontrols{
+#Qcontrols{
 	display:table;
 	margin-left:auto;
 	margin-right:auto;
@@ -26,9 +26,12 @@ h2,p{
 	padding:0px;
 	position: relative;
 }
-#dropdown li, #Qcontrols li{
-	width: 80px;
+#Qcontrols li{
 	height:20px;
+	margin: 1px;
+}
+.musbutton{
+	width: 55px;
 }
 #genre, #genrelink, .musbutton{
 	background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
@@ -92,17 +95,17 @@ h2,p{
 }
 
 /*--------------------------*/
-/*--------------------------*/
+/*----  Add All Button  ----*/
 /*--------------------------*/
 #addall {
 	position: absolute;
 	display: inline-block;
-	border-top: 20px solid #4A5F70;
+	border-top: 20px solid rgb(17, 81, 114);
 	border-left: 10px solid transparent;
 	border-right: 10px solid transparent;
 	height: 0;
 	width: 77px;
-	left: 35%;
+	left: 39%;
 	cursor: pointer;
 }
 #addall p{
@@ -111,25 +114,12 @@ h2,p{
 	left: 13px;
 	text-align: center;
 	margin: 0px;
-}/*
-#clearall {
-	position: absolute;
-	display: inline-block;
-	border-top: 20px solid #4A5F70;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	height: 0;
-	width: 77px;
-	left: 75%;
-	cursor: pointer;
+	color: #EFEFEF;
 }
-#clearall p{
-	position: absolute;
-	top: -21px;
-	left: 22px;
-	text-align: center;
-	margin: 0px;
-}*/
+
+/*--------------------------*/
+/*-----  Main Columns  -----*/
+/*--------------------------*/
 
 #Col1, #Col2{
 	background-color: #FFFFFF;
@@ -158,6 +148,7 @@ h2,p{
 #list2 p{
 	display: inline-block;
 	width: 80%;
+	margin: 6px;
 }
 .sortable-placeholder{
 	border: 1px dashed #CCC;
@@ -199,7 +190,7 @@ li:hover{
 }
 #Col1{
 	float: left;
-	width:35%;
+	width:40%;
 }
 #colsep{
 	position: relative;
@@ -225,14 +216,19 @@ h2{
 
 #maintitle, #qtitle{
 	margin:0px;
-
+	color: #EFEFEF;
+	position: relative;
 }
 .colheader{
 	text-align: center;
-	padding: 19.92px;
 	margin: 0px;
-	background-color: #4A5F70;
+	background-color: rgb(17, 81, 114);
 }
+
+/*--------------------------*/
+/*-------  Sidebars  -------*/
+/*--------------------------*/
+
 .sidebar{
 	float: left;	
 }
@@ -242,26 +238,36 @@ h2{
 	border-top: 1px;
 }
 .sidebar li{
-	height: 45px;
-	background-color: #FFFFFF;
-	border-top: 1px solid #C0C0C0;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
 	border-bottom: 1px solid #C0C0C0;
-	border-left: 1px solid #C0C0C0;
+	background-color: #FFFFFF;
+	vertical-align: middle;
 }
+
 #browsebar li{
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
 #playbar li{
-	height: 50px;
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
 .sidebar p{
-	text-align: center;
+	margin: 0px;
+	font-family: 'Arial', sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #464646;
+}
+.sidebar span{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 14px;
 }
 #playbar ul{
-	width: 60px;
+	width: 50px;
 	padding-left: 0px;
 }
 #makeplaylist p{
@@ -274,10 +280,11 @@ h2{
 	width: 41px;
 	float: left;
 }
-/*
-	BUBBLE
-*/
 
+
+/*------------------------------------*/
+/*----  Playlist Creation Bubble  ----*/
+/*------------------------------------*/
 .bubble 
 {
 	position: absolute;
@@ -322,6 +329,8 @@ h2{
 #pnameform{
 	text-align: center;
 }
+
+
 /*
 |  INTRODUCTORY PAGE STYLE
 |
@@ -379,6 +388,85 @@ input[type="file"]{
 	width: 100%;
 	opacity: 0;
 }
+
+
+/*--------------------------*/
+/*----   Progress Bar   ----*/
+/*--------------------------*/
+
+#current-song{
+	position: absolute;
+	z-index: 0;
+	height: 45px;
+	width: 300px;
+}
+#progressbar {
+	-webkit-transition: width .1s;
+	-moz-transition: width .1s;
+	-ms-transition: width .1s;
+	-o-transition: width .1s;
+	background-color: rgba(25,117,163, 0.9);
+	bottom: 0;
+	height: 100%;
+	left: 0;
+	line-height: 20px;
+	overflow: hidden;
+	padding: 5px 0px 5px 0px;
+	right: 0;
+	text-overflow: ellipsis;
+	top: 0;
+	white-space: nowrap;
+	z-index: -1;
+}
+
+
+/*--------------------------*/
+/*-----  Volume Slider  ----*/
+/*--------------------------*/
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+	border: 1px solid #d3d3d3;
+	background: #e6e6e6;
+	font-weight: normal;
+	color: #555555;
+	z-index: 0;
+	border-radius: 10px;
+	width: .9em;
+	height: .8em;
+}
+.ui-state-default:focus, .ui-widget-content .ui-state-default:focus, .ui-widget-header .ui-state-default:focus{
+	outline: 0px;
+}
+.ui-slider-horizontal{
+	width: 50px;
+	height: 0.4em;
+}
+.ui-widget-content{
+	background: #aaa;
+}
+
+#slider{
+	position: relative;
+    margin: 5px 5px 5px 0px;
+    display: inline-block;
+}
+
+#volbutton{
+	width: 100px;
+}
+#volimg{
+	height: 15px;
+	width: 17px;
+	display: inline-block;
+}
+
+
+
+
+
+
+
+
 
 
 

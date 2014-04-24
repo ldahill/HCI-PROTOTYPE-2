@@ -31,12 +31,14 @@ function playSound(queueindex){
         mySound = soundManager.createSound({
             id: 'track_' + file.name,
             url: objectURL,
+            whileplaying: function(){setprogress(this.position, this.duration)},
             autoplay: false
         });
         soundManager.play(mySound.id, {
             multiShotEvents: true,
             onfinish: function(){
                 isstreaming = false;
+                setprogress(0,1);
                 $('#list2 li').eq(now_playing_index).removeClass("playing");
                 $('#list2 li').eq(now_playing_index).removeClass("paused");
                 if(queueindex < queue.length){
@@ -199,6 +201,14 @@ $(document).ready(function() {
     $(".bubble").hide();
     $("#addall").hide();
     //$("#addall").hide();
+    $( "#slider" ).slider({ 
+                            min: 0,
+                            max: 100,
+                            value: 50,
+                            slide: function( event, ui ) {
+                                   sliderchange(event, ui);
+                            }
+                         });
     mainlist = new Array();
     queue = new Array();
     soundManager.setup({
@@ -214,6 +224,7 @@ $(document).ready(function() {
 
 //Handles resizing of the webpage
 $(window).resize(function(){
+    $("#current-song").width($("#qheader").width());
     var col1 = $('#Col1');
     var col2 = $('#Col2');
     var colsep = $('#colsep');
@@ -607,8 +618,29 @@ $("#fwdbutton").on("click", function(){
 });
 
 
+function addprogbar(listindex){
+    setprogress(0, 100);
+  /*  selector = "#list2 li:nth-child(" + listindex + ")"; 
+    $("#progressbar").remove();
+    $(selector).append("<div id = \"progressbar\"></div>");
+    console.log(selector);
+    console.log($(selector).text());
+    $("#list2 li").eq(listindex).prepend("<span id = \"progressbar\"></span>");
+    */
+}
 
+function setprogress(currpos, length){
+    progwidth = currpos/length;
+    console.log(currpos+ "  " + length);
+    $("#progressbar").css('width', (progwidth * 100) + "%");
+}
 
-
+function sliderchange(event, ui){
+    if(typeof mySound === 'undefined'){}
+    else{
+        volval = ui.value;
+        soundManager.setVolume(mySound.id,volval);
+    }
+}
 
 

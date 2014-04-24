@@ -4,13 +4,11 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Luke">
-    <link rel="stylesheet" type="text/css" href="style.css">
     <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
     <title>Spottie Ottie Prototype</title>
   </head>
 
   <body>
-    <a href="/screen1.html"></a>
     <div id="ColContainer" role="navigation">
       <div class = "sidebar" id = "browsebar">
           <ul>
@@ -33,13 +31,21 @@
       </div>
 
       <div id="Col2">
-        <div class= "colheader">
-          <h2 id = "qtitle">Play Queue</h2>
-          <ul id = "Qcontrols">
-            <li class="musbutton" id="backbutton"><img src="backbutton.png" id="controlimg"></li>
-            <li class="musbutton" id="playbutton"><img src="playbutton.png" id="playimg"></li>
-            <li class="musbutton" id="fwdbutton"><img src="fwdbutton.png" id="controlimg"></li>
-          </ul>
+        <div class= "colheader" id="qheader">
+          <div id="current-song">
+            <div id="progressbar" style="width: 0%;"></div>
+          </div>
+            <h2 id = "qtitle">Play Queue</h2>
+            <ul id = "Qcontrols">
+              <li class="musbutton" id="backbutton"><img src="backbutton.png" id="controlimg"></li>
+              <li class="musbutton" id="playbutton"><img src="playbutton.png" id="playimg"></li>
+              <li class="musbutton" id="fwdbutton"><img src="fwdbutton.png" id="controlimg"></li>
+              <li class="musbutton" id="volbutton"> 
+                <img src="paused.png" id="volimg">
+                <div id="slider"></div>
+                <img src="playing.png" id="volimg">
+              </li>
+            </ul>
         </div>
       <!--  <div id="clearall"><p>Clear</p></div>-->
         <div id="list2div">
@@ -51,7 +57,7 @@
       <div class = "sidebar" id = "playbar">
         <ul>
           <li id="sourcebuttn"><p>Path</p></li>
-          <li id="makeplaylist"><p>Make </br> Playlist</p></li>
+          <li id="makeplaylist"><span><p>Make Playlist</p></span></li>
           <li id="clearall"><p>Clear</p></li>
         </ul>
       </div>
@@ -77,12 +83,12 @@
         <input type="file" multiple webkitdirectory id="fileURL"/>
       </div>
     </div>
- <!--   <div id="foot">
-      <input type="file" multiple webkitdirectory id="fileURL"/>
-      <ul id="fileOutput"></ul>
-    </div>  -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="jquery.sortable.js"></script>
     <script> $(".sortable").sortable('enable');</script>
     <script type="text/javascript" src="soundmanager2.js"></script>
