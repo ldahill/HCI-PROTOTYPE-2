@@ -16,6 +16,7 @@ var subset = [];
 var history = [];  //Array of tuples: {displaying string, object}
 var dragstartindex = null;
 
+
 function playSound(queueindex){
     if (now_playing_index != queueindex){
         if(isstreaming == true || ispaused == true){
@@ -50,24 +51,26 @@ function playSound(queueindex){
         isstreaming = true;
         ispaused = false;
         $('#list2 li').eq(queueindex).removeClass("paused").addClass("playing"); 
-        $("#playbutton").html("<img src=\"pausebutton.png\" id=\"pauseimg\">");      
+        setplaybutt("pause");
+       // $("#playbutton").html("<img src=\"pausebutton.png\" id=\"pauseimg\">");      
     }
     else if(ispaused){
         mySound.play();
         isstreaming = true;
         ispaused = false;
         $('#list2 li').eq(now_playing_index).removeClass("paused").addClass("playing");
-        $("#playbutton").html("<img src=\"pausebutton.png\" id=\"pauseimg\">");    
+        setplaybutt("pause");
+        //$("#playbutton").html("<img src=\"pausebutton.png\" id=\"pauseimg\">");    
     }
     else {
         mySound.pause();
         isstreaming = false;
         ispaused = true;
         $('#list2 li').eq(now_playing_index).removeClass("playing").addClass("paused");
-        $("#playbutton").html("<img src=\"playbutton.png\" id=\"playimg\">");    
+        setplaybutt("play");
+        //$("#playbutton").html("<img src=\"playbutton.png\" id=\"playimg\">");    
     }
 }
-
 
 $('input[type=file]').change(function(e){
     $('#cover').remove();
@@ -155,17 +158,25 @@ function addtoContainers(fileindex, filepath){
 }
 
 
-//--------------------------------------------------------------------||
+/*
+    /--------------------------------------------\
+    |         DRAG AND DROP FUNCTIONALITY        |
+    \--------------------------------------------/
+*/
+
+//arr.splice(2, 0, "Lene");
+
 function enablesorting(){
     $('.sortable').sortable({
         items: ':not(.disabled)'
     });
 }
+
 $('.sortable').sortable().bind('dragstart', function(e) {
-    //console.log(queue);
     console.log($(e.target).index());
     dragstartindex = $(e.target).index();
 });
+
 $('.sortable').sortable().bind('sortupdate', function(e, ui) {
     //ui.item contains the current dragged element.
     newindex = ui.item.index();
@@ -181,6 +192,7 @@ $('.sortable').sortable().bind('sortupdate', function(e, ui) {
     }
     //Triggered when the user stopped sorting and the DOM position has changed.
 });
+
 function arraymove(arr, fromIndex, toIndex){
     printit(arr);
     var element = arr[fromIndex];
@@ -188,12 +200,15 @@ function arraymove(arr, fromIndex, toIndex){
     arr.splice(toIndex, 0, element);
     printit(arr);
 }
+
 function printit(arr){
     for( var i = 0; i < arr.length; i++){
         console.log(arr[i].title);
     }
     console.log("---------------");
 }
+
+
 //Upon loading the document a mainlist and queue array are initialized.
 //The mainlist is filled with artists to display by triggering an artists click
 //soundManager is also initialized.
@@ -367,7 +382,11 @@ $(document).on('mouseenter', '#list2 li', function(e){
         queue.splice(j, 1);
         qelem.remove();
         if(j == now_playing_index){
+            isstreaming = false;
+            ispaused = false;
             mySound.stop();
+            now_playing_index = -1;
+            setplaybutt("play");
         }
     });
 });
@@ -519,6 +538,7 @@ $("#listnamebutton").on("click", function(){
 $("#cancelname").on("click", function(){
     $(".bubble").hide();
 })
+
 function getplaylist(){
     var listname = $("#listname").val();
     if (listname != "")
@@ -534,12 +554,14 @@ function getplaylist(){
 
 $("#clearall").on("click", function(){
     $("#list2").empty();
+    setplaybutt("play");
     for(var i = 0; i < queue.length; i++){
         queue[i].isqd = false;
     }
     queue = [];
     if(now_playing_index != -1){
         mySound.stop();
+
     }
 })
 
@@ -598,7 +620,8 @@ $("#playbutton").on("click", function(){
     if(queue.length > 0){
         if(htmltext == "<img src=\"pausebutton.png\" id=\"pauseimg\">"){
             playSound(now_playing_index);
-            $(this).html("<img src=\"playbutton.png\" id=\"playimg\">");
+            //$(this).html("<img src=\"playbutton.png\" id=\"playimg\">");
+            setplaybutt("play");
         }
         else if(htmltext == "<img src=\"playbutton.png\" id=\"playimg\">"){
             if(now_playing_index == -1){
@@ -607,7 +630,8 @@ $("#playbutton").on("click", function(){
             else{
                 playSound(now_playing_index);
             }
-            $(this).html("<img src=\"pausebutton.png\" id=\"pauseimg\">");
+            setplaybutt("pause");
+           // $(this).html("<img src=\"pausebutton.png\" id=\"pauseimg\">");
         }
     }
 });
@@ -616,6 +640,16 @@ $("#fwdbutton").on("click", function(){
     targetindex = now_playing_index + 1;
     if (targetindex < queue.length){playSound(targetindex);}
 });
+
+function setplaybutt(a){
+    if(a != "play" && a != "pause"){
+        console.log("INVALID STRING")
+        return;
+    }
+    htmltext = "<img src=\""+a+"button.png\" id=\""+a+"img\">"
+    $("#playbutton").html(htmltext);
+}
+//$("#playbutton").html("<img src=\"playbutton.png\" id=\"playimg\">");
 
 
 function addprogbar(listindex){
