@@ -15,7 +15,7 @@ var subset = [];
 
 var history = [];  //Array of tuples: {displaying string, object}
 var dragstartindex = null;
-
+var elemdragged = null;
 
 function playSound(queueindex){
     if (now_playing_index != queueindex){
@@ -166,9 +166,21 @@ function addtoContainers(fileindex, filepath){
 
 //arr.splice(2, 0, "Lene");
 
-function enablesorting(){
-    $('.sortable').sortable({
-        items: ':not(.disabled)'
+function enablesorting(listvar){
+    if(listvar = "list2"){
+        $('#list2').sortable({
+            items: ':not(.disabled)'
+        });
+    }
+    else if(listvar = "list1"){
+        $('#list1').sortable({
+            items: ':not(.disabled)'
+        });
+    }
+}
+function connectsorting(){
+    $('#list1, #list2').sortable({
+    connectWith: '.connected'
     });
 }
 
@@ -271,7 +283,7 @@ $(document).on('click', '#list1 li', function(){
             songobj.isqd = true;
             songobj.source = history[history.length - 1].obj;
             list2.append($(this).clone());
-            enablesorting();
+            enablesorting('list2');
             $(window).trigger('resize');
         } 
     }
@@ -326,6 +338,7 @@ function selectedartist(artistobj){
         subset.push(albumobj);
     }
     displaying = "albums";
+    
     $("#addall").hide(450);
     //HIDEADDALL
     // history.push({displaying: "artists", obj: artistobj});
@@ -340,14 +353,12 @@ function selectedalbum(albumobj){
     subset = [];
     for(i = 0, len = songarr.length; i < len; i++){
         song = songarr[i];
-        list1.append("<li><p>"+song.title+"<small> "+song.artist+"</small></p>");
+        list1.append("<li draggable=true ondragstart=\"drag(event)\"><p>"+song.title+"<small> "+song.artist+"</small></p>");
         subset.push(song);
     }
     isSubset = true;
     displaying = "songs";
     $("#addall").show(450);
-    //SHOWHIDEALL
-    // history.push({displaying: "albums", obj: albumobj});
 }
 function selectedplaylist(playlistobj){
     history.push({displaying: "playlists", obj: playlistobj});
@@ -359,7 +370,7 @@ function selectedplaylist(playlistobj){
     subset = [];
     for(i = 0, len = songarr.length; i < len; i++){
         song = songarr[i];
-        list1.append("<li><p>"+song.title+"<small> "+song.artist+"</small></p>");
+        list1.append("<li draggable=true ondragstart=\"drag(event)\"><p>"+song.title+"<small> "+song.artist+"</small></p>");
         subset.push(song);
     }
     isSubset = true;
@@ -408,7 +419,8 @@ $("#playlists").on("click", function(){
             listname = playlists[i].title;
             $('#list1').append("<li><p>" +listname+ " </p></li>");
         };
-        displaying = "playlists";
+        displaying = "songs";
+
         isSubset = false;
         setdisplaybuttoncolor('#7e9fb9');
         $("#addall").hide(450);
@@ -423,6 +435,7 @@ $("#artists").on("click", function(){
         $('#list1').append("<li><p>" +artistname+ " </p></li>");
     };
     displaying = "artists";
+    
     isSubset = false;
     setdisplaybuttoncolor('#7e9fb9');
     $("#addall").hide(450);
@@ -444,6 +457,7 @@ $("#albums").on("click", function(){
         $('#list1').append("<li><p> "+albumname+" </p></li>");
     }
     displaying = "albums";
+    
     isSubset = false;
     setdisplaybuttoncolor('#7e9fb9');
     $("#addall").hide(450);
@@ -455,7 +469,7 @@ $("#songs").on("click", function(){
     for(var i = 0, len = songs.length; i < len; i++){
         songname = songs[i].title;
         artist = songs[i].artist;
-        $('#list1').append("<li><p>"+songname+"<small> "+artist+" </small></p>");
+        $('#list1').append("<li draggable=true ondragstart=\"drag(event)\"><p>"+songname+"<small> "+artist+" </small></p>");
     }
     displaying = "songs";
     isSubset = false;
@@ -575,6 +589,7 @@ function setdisplaybuttoncolor(color){
 }
 
 $("#brwseback").on("click",function(){
+    console.log("back button pushed");
     if(history.length >= 2){
         history.pop();
         hist = history.pop();
@@ -589,12 +604,15 @@ $("#brwseback").on("click",function(){
         else{
             if(displaying = "artists"){
                 selectedartist(obj);
+                
             }
             else if(displaying = "albums"){
                 selectedalbum(obj);
+                
             }
             else if(displaying = "playlists"){
                 selectedplaylist(obj);
+                
             }
         }
     }
@@ -665,7 +683,6 @@ function addprogbar(listindex){
 
 function setprogress(currpos, length){
     progwidth = currpos/length;
-    console.log(currpos+ "  " + length);
     $("#progressbar").css('width', (progwidth * 100) + "%");
 }
 
@@ -676,5 +693,53 @@ function sliderchange(event, ui){
         soundManager.setVolume(mySound.id,volval);
     }
 }
+
+
+
+function drag(ev)
+{
+    elemdragged = ev.target;
+    if(ev.target.parentNode.id != "list1"){
+        elemdragged = null;
+    }
+}
+function allowDrop(ev)
+{
+    if(elemdragged != null){
+        elemindex = $(elemdragged).index();
+        if(isSubset == false){
+            songobj = songs[elemindex];
+        }
+        else{
+            songobj = subset[elemindex];
+        }
+        if(songobj.isqd == false){
+            ev.preventDefault();
+        }
+    }
+}
+
+function drop(ev)
+{
+    ev.preventDefault();
+    if(elemdragged != null){
+        $(elemdragged).trigger("click");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
