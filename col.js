@@ -419,7 +419,7 @@ $("#playlists").on("click", function(){
             listname = playlists[i].title;
             $('#list1').append("<li><p>" +listname+ " </p></li>");
         };
-        displaying = "songs";
+        displaying = "playlists";
 
         isSubset = false;
         setdisplaybuttoncolor('#7e9fb9');
@@ -558,10 +558,12 @@ function getplaylist(){
     if (listname != "")
     {
         playlistobj = {title: listname, songobjs: []};
+        console.log(playlistobj);
         for(var i = 0; i < queue.length; i++){
             songobj = queue[i];
             playlistobj.songobjs.push(songobj);
         }
+        console.log("YO YO YO", playlistobj);
         playlists.push(playlistobj);
     }
 }
