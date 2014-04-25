@@ -282,6 +282,8 @@ h2{
 	height: 28px;
 	width: 41px;
 	float: left;
+	cursor: pointer;
+	z-index:5;	
 }
 
 

@@ -577,7 +577,7 @@ $("#clearall").on("click", function(){
         mySound.stop();
 
     }
-})
+});
 
 function setdisplaybuttoncolor(color){
     $("#artists").css('background-color','#FFFFFF');
@@ -591,6 +591,7 @@ function setdisplaybuttoncolor(color){
 $("#brwseback").on("click",function(){
     console.log("back button pushed");
     if(history.length >= 2){
+        console.log("got here")
         history.pop();
         hist = history.pop();
         console.log("Return to: ");
